@@ -1,9 +1,9 @@
-const {Router} = require('express');
+const { Router } = require('express');
 
-module.exports = function({BDController}){
+module.exports = function ({ BDController }) {
     const router = Router();
 
-    router.get('/', BDController.index);
+    router.get('/', BDController.getData);
 
     return router;
 };
