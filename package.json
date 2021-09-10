@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "activedirectory": "^0.7.2",
     "awilix": "^4.3.3",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
@@ -20,7 +21,9 @@
     "express": "^4.17.1",
     "express-async-errors": "^3.1.1",
     "helmet": "^4.5.0",
+    "jsonwebtoken": "^8.5.1",
     "mssql": "^6.3.1",
-    "nodemon": "^2.0.7"
+    "nodemon": "^2.0.7",
+    "objectmodel": "^4.3.0"
   }
 }

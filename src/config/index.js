@@ -1,4 +1,4 @@
-if(process.env.NODE_ENV !== 'production'){
+if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
 
@@ -10,5 +10,10 @@ module.exports = {
     PASS_DB: process.env.PASS_DB,
     DATABASE: process.env.DATABASE,
     INSTANCE_NAME: process.env.INSTANCE_NAME,
-    PORT_DB: process.env.PORT_DB
+    PORT_DB: process.env.PORT_DB,
+    LDAP: process.env.LDAP,
+    DN: process.env.DN,
+    USER_AD: process.env.USER_AD,
+    GROUPNAME: process.env.GROUPNAME,
+    TOKEN_SECRET: process.env.TOKEN_SECRET
 }

@@ -1,23 +1,25 @@
-const {createContainer, asClass, asValue, asFunction} = require('awilix');
+const { createContainer, asClass, asValue, asFunction } = require('awilix');
 
 const config = require('../config');
 const app = require('./index');
 
 //Service
-const {BDService} = require('../service');
+const { BDService, ADService, AuthService, BaseService } = require('../service');
 
 //Controller
-const {BDController} = require('../controller')
+const { BDController, ADController, AuthController } = require('../controller');
 
 //Routes
 const Routes = require('../route');
-const {BDRoutes} = require('../route/index.routes');
+const { BDRoutes, ADRoutes } = require('../route/index.routes');
+
 //Models
+const {UserModel} = require('../model');
 
 //Repositories
+const {AdRepository, BaseRepository} = require('../repository');
 
 //Config Container
-
 const container = createContainer();
 
 container.register({
@@ -25,11 +27,22 @@ container.register({
     router: asFunction(Routes).singleton(),
     config: asValue(config),
 }).register({
-    BDService: asClass(BDService).singleton()
+    BDService: asClass(BDService).singleton(),
+    ADService: asClass(ADService).singleton(),
+    AuthService: asClass(AuthService).singleton(),
+    BaseService: asClass(BaseService).singleton(),
 }).register({
-    BDController: asClass(BDController.bind(BDController)).singleton()
+    BDController: asClass(BDController.bind(BDController)).singleton(),
+    ADController: asClass(ADController.bind(ADController)).singleton(),
+    AuthController: asClass(AuthController.bind(AuthController)).singleton()
 }).register({
-    BDRoutes: asFunction(BDRoutes).singleton()
+    BDRoutes: asFunction(BDRoutes).singleton(),
+    ADRoutes: asFunction(ADRoutes).singleton()
+}).register({
+    User: asValue(UserModel)
+}).register({
+    BaseRepository: asClass(BaseRepository).singleton(),
+    AdRepository: asClass(AdRepository).singleton()
 });
 
 module.exports = container;

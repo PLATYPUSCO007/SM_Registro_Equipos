@@ -1,3 +1,4 @@
 module.exports = {
-    BDRoutes: require('./BD.routes')
+    BDRoutes: require('./BD.routes'),
+    ADRoutes: require('./AD.routes')
 };
