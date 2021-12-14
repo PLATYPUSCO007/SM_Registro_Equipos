@@ -1,23 +1,22 @@
-const {JWTHelper} = require('../helper');
+const { JWTHelper } = require("../helper");
+const { ErrorHelper } = require("../helper");
 let _adService = {};
 
-class AuthService{
-    constructor({ADService}){
-        _adService = ADService;
-    }
+class AuthService {
+  constructor({ ADService }) {
+    _adService = ADService;
+  }
 
-    async signIn(user){
-        const userToEncode = {
-            username: user.displayName,
-            id: user.employeeID
-        }
-
-        const token = JWTHelper.generateToken(userToEncode);
-
+    async signIn(user) {
+      try {
+        const token = await JWTHelper.generateToken(user);
         return {
             token,
-            user: userToEncode
-        }
+            user
+        } 
+      } catch (error) {
+        return ErrorHelper.generateError('No se logro generar el token', 400);
+      }
     }
 }
 

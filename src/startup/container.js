@@ -11,7 +11,7 @@ const { BDController, ADController, AuthController } = require('../controller');
 
 //Routes
 const Routes = require('../route');
-const { BDRoutes, ADRoutes } = require('../route/index.routes');
+const { BDRoutes, ADRoutes, AuthRoutes } = require('../route/index.routes');
 
 //Models
 const {UserModel} = require('../model');
@@ -37,7 +37,8 @@ container.register({
     AuthController: asClass(AuthController.bind(AuthController)).singleton()
 }).register({
     BDRoutes: asFunction(BDRoutes).singleton(),
-    ADRoutes: asFunction(ADRoutes).singleton()
+    ADRoutes: asFunction(ADRoutes).singleton(),
+    AuthRoutes: asFunction(AuthRoutes).singleton()
 }).register({
     User: asValue(UserModel)
 }).register({

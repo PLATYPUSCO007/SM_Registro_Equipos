@@ -1,114 +1,69 @@
-const {ErrorHelper} = require('../helper');
-const BaseService = require('./Base.service');
+const { ErrorHelper } = require("../helper");
+const BaseService = require("./Base.service");
 let config_ad = {};
 let _ad = null;
 let _adService = null;
-const active_directoy = require('activedirectory');
+const active_directoy = require("activedirectory");
 let userNew = null;
 
-class ADService extends BaseService{
+class ADService extends BaseService {
+  constructor({ config, AdRepository }) {
+    super(AdRepository);
+    _adService = AdRepository;
+    config_ad = {
+      url: config.LDAP,
+      baseDN: config.DN,
+      group: config.GROUPNAME,
+    };
+    userNew = null;
+  }
 
-    constructor({ config, AdRepository }) {
-        super(AdRepository);
-        _adService = AdRepository;
-        config_ad = {
-            url: config.LDAP,
-            baseDN: config.DN,
-            group: config.GROUPNAME
-        }
-        userNew = null;
+  async connectAD(user, pass) {
+    try {
+      let config_test = {
+        url: config_ad.url,
+        baseDN: config_ad.baseDN,
+        bindDN: user,
+        bindCredentials: pass,
+      };
+      _ad = new active_directoy(config_test);
+      if (!_ad) {
+        return ErrorHelper.generateError(
+          "Error al iniciar el servicio AD",
+          401
+        );
+      } else {
+        return _ad;
+      }
+    } catch (error) {
+      return ErrorHelper.generateError(error.message, 401);
     }
+  }
 
-    async connectAD(user, pass) {
-        try {
-
-            let config_test = {
-                url: config_ad.url,
-                baseDN: config_ad.baseDN,
-                bindDN: user,
-                bindCredentials: pass
-            }
-
-            _ad = new active_directoy(config_test);
-
-            if (!_ad) {
-                throw ErrorHelper.generateError('Error al iniciar el servicio AD', 301);
-            }
-            
-        } catch (error) {
-            throw ErrorHelper.generateError(error.message, 401);
-        }
-
-        return true;
+  async create(newUser){
+    try {
+      let user = await _adService.create(newUser);
+      return user;
+    } catch (error) {
+      return ErrorHelper.generateError(error.messaage, 301);
     }
+  }
 
-    async authenticateAD(user, pass){
-        try {
-            _ad.authenticate(user, pass, async function name(error, auth) {
+  async getUser() {
+    try {
+      const user = await _adService.getUser();
+      console.log("Usuario devuelto " + JSON.stringify(user));
 
-                try {
-                    if (error) {
-                        throw ErrorHelper.generateError(error.message, 301);
-                    }    
+      if (user != undefined) {
+        return user;
+      }
 
-                    if (auth) {
-                       _ad.isUserMemberOf(user, config_ad.group, async function(error, isMemeber) {
-
-                            try{
-
-                                if (error) {
-                                    throw ErrorHelper.generateError(error.message, 301);
-                                }
-
-                                if (isMemeber) {
-                                
-                                     _ad.findUser(user, async function(error, user) {
-                                         try {
-                                             if (error) {
-                                                 throw ErrorHelper.generateError(error.message, 301);
-                                             }
-                                         
-                                             let {sn, displayName} = user;
-                                             let userFind = {
-                                                 sn,
-                                                 displayName
-                                             }
-                                         
-                                             _adService.create(userFind).then(user=>{
-                                                userNew = user;
-                                                console.log(JSON.stringify(userNew));
-                                             });   
-                                         
-                                         } catch (error) {
-                                             throw ErrorHelper.generateError(error.message, 301);
-                                         }
-                                     
-                                     });
-                                 
-                                }
-                            } catch (error) {
-                                throw ErrorHelper.generateError(error.message, 301);
-                            }
-                       });
-                    }
-
-                    return null;
-
-                } catch (error) {
-                    throw ErrorHelper.generateError(error.message, 301);
-                }
-
-            });
-        } catch (error) {
-            throw ErrorHelper.generateError(error.message, 301);
-        }
-        return true;
+      return ErrorHelper.generateError("El usuario no Existe", 500);
+    } catch (error) {
+      return ErrorHelper.generateError(error.message, 301);
     }
-
-    async getUser(){
-        return await _adService.getUser();
-    }
-
+  }
+  
 }
 
 module.exports = ADService;
