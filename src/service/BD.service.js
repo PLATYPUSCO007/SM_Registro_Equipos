@@ -1,6 +1,8 @@
 let config_db = {};
 const mssql = require('mssql');
 
+var createInstance = {};
+
 class BDService {
 
     constructor({ config }) {
@@ -19,17 +21,21 @@ class BDService {
         }
     }
 
-    async createInstance() {
-        try {
-            let pool = await mssql.connect(config_db);
-            if (!pool) {
-                throw new Error('No se logro conectar');
-            }
-            return pool;
-        } catch (error) {
-            console.log(error.message);
-        }
+    getMSSQL(){
+        return mssql;
     }
+
+    createInstance(){
+        try {
+            const connect = new mssql.ConnectionPool(config_db);
+            return connect;
+        } catch (error) {
+            console.log('No se logro crear la instancia de DB', error.message);
+            return error;
+        }
+        
+    } 
+    
 }
 
 module.exports = BDService;

@@ -1,9 +1,12 @@
 const { Router } = require('express');
 
-module.exports = function ({ BDController }) {
+module.exports = function ({ PerifericoRoutes }) {
     const router = Router();
 
-    router.get('/', BDController.getData);
+    router.use('/periferico', PerifericoRoutes);
+    router.get('/', function(req, res){
+        res.status(200).send('BD LOAD...')
+    });
 
     return router;
 };

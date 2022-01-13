@@ -1,3 +1,4 @@
+
 class BaseRepository{
 
     constructor(model){
@@ -5,7 +6,7 @@ class BaseRepository{
     }
 
     async create(entity){
-        return await this.model.create(entity);
+        return this.model.create(entity);
     }
 
     async getUser(){
