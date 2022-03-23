@@ -16,7 +16,7 @@ class EquipoService extends BaseService {
             equipoNew = await _equipoService.create(equipo);
             return equipoNew;
         } catch (error) {
-            return ErrorHelper.generateError('El modelo no es valido ' + error.message, 301);
+            return ErrorHelper.generateError('El modelo no es valido ' + error.message, 400);
         }
     }
 }

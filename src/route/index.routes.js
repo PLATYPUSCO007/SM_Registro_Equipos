@@ -3,4 +3,5 @@ module.exports = {
     ADRoutes: require('./AD.routes'),
     AuthRoutes: require('./Auth.routes'),
     PerifericoRoutes: require('./Periferico.routes'),
+    EquipoRoutes: require('./Equipo.routes'),
 };

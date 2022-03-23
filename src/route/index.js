@@ -8,7 +8,7 @@ const {AuthMiddleware} = require('../middleware');
 
 require('express-async-errors');
 
-module.exports = function ({ BDRoutes, AuthRoutes,  }) {
+module.exports = function ({ BDRoutes, AuthRoutes }) {
     const router = express.Router();
     const apiRoute = express.Router();
 
