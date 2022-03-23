@@ -231,6 +231,201 @@ class EquipoController {
         }
     }
 
+    async deleteEquipo(req, res){
+
+        try {
+
+            let data;
+
+            if (req.params.id == null) {
+                res.status(405).send('Error del cliente, Id no enviado');
+                return;
+            }
+
+            let {id} = req.params;
+
+            _pool = _bdService.createInstance();
+
+            await _pool.connect()
+                .then(async (pool)=>{
+                    console.log('Conectado a MSSQL');
+                    try {
+                         data = await pool.request()
+                        .input('id_activo_fijo', sql.NVarChar, id)
+                        .query("DELETE FROM [dbo].[equipo] WHERE id_activo_fijo = @id_activo_fijo")
+                    } catch (error) {
+                        console.log('No se pudo eliminar el registro. ', error.message);
+                        res.status(500).send(error);
+                        return;
+                    }
+                })
+                .catch((error)=>{
+                    console.log('Connect Database Failed', error.message);
+                    res.status(500).send(error);
+                    return;
+                })
+                .finally(()=>{
+                    _pool.close();
+                    res.status(200).json(data);
+                });
+            
+        } catch (error) {
+            console.log(error.message);
+            res.status(500).send(error.message);
+        }
+
+        return;
+    }
+
+    async updateEquipo(req, res){
+        try {
+            let data;
+
+            if (req.body.id_activo_fijo == null || req.body.tipo == null || req.body.fecha_compra == null || req.body.fecha_baja == null || req.body.estado == null || req.body.tipo_propiedad == null) {
+                res.status(405).send('Error del cliente, faltan parametros');
+                return;
+            }
+
+            let {id_activo_fijo, tipo, fecha_compra, fecha_baja, estado, tipo_propiedad} = req.body;
+
+            fecha_compra = new Date(fecha_compra);
+            fecha_baja = new Date(fecha_baja);
+
+            let equipo = {
+                id_activo_fijo,
+                tipo,
+                fecha_compra,
+                fecha_baja,
+                estado,
+                tipo_propiedad                
+            }
+
+            let objectEquipo = await _equipoService.create(equipo);
+            
+            if (objectEquipo.message) {
+                res.status(400).send('Error en el servidor ' + objectEquipo.message);
+                return;
+            }
+
+            _pool = _bdService.createInstance();
+
+            await _pool.connect()
+                .then(async (pool)=>{
+                    console.log('Conectado a MSSQL');
+                    try {
+                         data = await pool.request()
+                         .input('id_activo_fijo', sql.NVarChar, objectEquipo.id_activo_fijo)
+                         .input('tipo', sql.NVarChar, objectEquipo.tipo)
+                         .input('fecha_compra', sql.DateTime, objectEquipo.fecha_compra)
+                         .input('fecha_baja', sql.DateTime, objectEquipo.fecha_baja)
+                         .input('estado', sql.NVarChar, objectEquipo.estado)
+                         .input('tipo_propiedad', sql.NVarChar, objectEquipo.tipo_propiedad)
+                        .query("UPDATE [dbo].[equipo] SET tipo = @tipo, fecha_compra = @fecha_compra, fecha_baja = @fecha_baja, estado = @estado, tipo_propiedad = @tipo_propiedad WHERE id_activo_fijo = @id_activo_fijo")
+                    } catch (error) {
+                        console.log('No se pudo actualizar el registro. ', error.message);
+                        res.status(500).send(error);
+                        return;
+                    }
+                })
+                .catch((error)=>{
+                    console.log('Connect Database Failed', error.message);
+                    res.status(500).send(error);
+                    return;
+                })
+                .finally(()=>{
+                    _pool.close();
+                    res.status(200).json(data);
+                });
+
+        } catch (error) {
+            console.log(error.message);
+            res.status(500).send(error.message);
+        }
+
+        return;
+    }
+
+    async getEquipo(req, res){
+        try {
+
+            let data;
+
+            if (req.params.id == null) {
+                res.status(405).send('Error del cliente, Id no enviado');
+                return;
+            }
+            let {id} = req.params;
+
+            _pool = _bdService.createInstance();
+
+            await _pool.connect()
+                .then(async (pool)=>{
+                    console.log('Conectado a MSSQL');
+                    try {
+                         data = await pool.request()
+                        .input('id_activo_fijo', sql.NVarChar, id)
+                        .query("SELECT * FROM [dbo].[equipo] WHERE id_activo_fijo = @id_activo_fijo")
+                    } catch (error) {
+                        console.log('No se pudo obtener el registro. ', error.message);
+                        res.status(500).send(error);
+                        return;
+                    }
+                })
+                .catch((error)=>{
+                    console.log('Connect Database Failed', error.message);
+                    res.status(500).send(error);
+                    return;
+                })
+                .finally(()=>{
+                    _pool.close();
+                    res.status(200).json(data);
+                });
+
+
+        } catch (error) {
+            console.log(error.message);
+            res.status(500).send(error.message);
+        }
+
+        return;
+    }
+
+    async getAllEquipos(req, res){
+        try {
+            let data;
+
+            _pool = _bdService.createInstance();
+
+            await _pool.connect()
+                .then(async (pool)=>{
+                    console.log('Conectado a MSSQL');
+                    try {
+                        data = await pool.request()
+                        .query("SELECT * FROM [dbo].[equipo]")
+                    } catch (error) {
+                        console.log('No se pudo obtener los registros. ', error.message);
+                        res.status(500).send(error);
+                        return;
+                    }
+                })
+                .catch((error)=>{
+                    console.log('Connect Database Failed', error.message);
+                    res.status(500).send(error);
+                    return;
+                })
+                .finally(()=>{
+                    _pool.close();
+                    res.status(200).json(data);
+                });
+
+        } catch (error) {
+            console.log(error.message);
+            res.status(500).send(error.message);
+        }
+
+        return;
+    }
+
     async UploadFile(req, res){
         try {
 
