@@ -162,8 +162,8 @@ class EquipoController {
         try {
             // console.log(req.body);
 
-            if (req.body.id_activo_fijo != null && req.body.tipo != null && req.body.fecha_compra != null && req.body.fecha_baja != null && req.body.estado != null && req.body.tipo_propiedad != null) {
-                let {id_activo_fijo, tipo, fecha_compra, fecha_baja, estado, tipo_propiedad} = req.body;
+            if (req.body.id_activo_fijo != null && req.body.tipo != null && req.body.nombre != null && req.body.serie != null && req.body.fecha_compra != null && req.body.fecha_baja != null && req.body.estado != null && req.body.tipo_propiedad != null && req.body.id_os != null && req.body.id_fabricante != null && req.body.id_modelo != null) {
+                let {id_activo_fijo, tipo, nombre, serie, fecha_compra, fecha_baja, estado, tipo_propiedad, id_os, id_fabricante, id_modelo} = req.body;
 
                 fecha_baja = new Date(fecha_baja);
                 fecha_compra = new Date(fecha_compra);
@@ -171,10 +171,15 @@ class EquipoController {
                 let equipo = {
                     id_activo_fijo,
                     tipo,
+                    nombre,
+                    serie,
                     fecha_compra,
                     fecha_baja,
                     estado,
-                    tipo_propiedad                
+                    tipo_propiedad,
+                    id_os,
+                    id_fabricante,
+                    id_modelo                
                 }
 
                 let objectEquipo = await _equipoService.create(equipo);
@@ -189,11 +194,16 @@ class EquipoController {
                                 const data = await pool.request()
                                 .input('id_activo_fijo', sql.NVarChar, objectEquipo.id_activo_fijo)
                                 .input('tipo', sql.NVarChar, objectEquipo.tipo)
+                                .input('nombre', sql.NVarChar, objectEquipo.nombre)
+                                .input('serie', sql.NVarChar, objectEquipo.serie)
                                 .input('fecha_compra', sql.DateTime, objectEquipo.fecha_compra)
                                 .input('fecha_baja', sql.DateTime, objectEquipo.fecha_baja)
                                 .input('estado', sql.NVarChar, objectEquipo.estado)
                                 .input('tipo_propiedad', sql.NVarChar, objectEquipo.tipo_propiedad)
-                                .query("INSERT INTO [dbo].[equipo] (id_activo_fijo,tipo,fecha_compra,fecha_baja,estado,tipo_propiedad) VALUES (@id_activo_fijo,@tipo,@fecha_compra,@fecha_baja,@estado,@tipo_propiedad)")
+                                .input('id_os', sql.NVarChar, objectEquipo.id_os)
+                                .input('id_fabricante', sql.NVarChar, objectEquipo.id_fabricante)
+                                .input('id_modelo', sql.NVarChar, objectEquipo.id_modelo)
+                                .query("INSERT INTO [dbo].[equipo] (id_activo_fijo,tipo,nombre,serie,fecha_compra,fecha_baja,estado,tipo_propiedad,id_os,id_fabricante,id_modelo) VALUES (@id_activo_fijo,@tipo,@nombre,@serie,@fecha_compra,@fecha_baja,@estado,@tipo_propiedad,@id_os,@id_fabricante,@id_modelo)")
                                 
                                 if ((req.files.length == 0)) {
                                     res.status(200).json({data, error: 'No se cargaron los archivos'});
@@ -281,12 +291,12 @@ class EquipoController {
         try {
             let data;
 
-            if (req.body.id_activo_fijo == null || req.body.tipo == null || req.body.fecha_compra == null || req.body.fecha_baja == null || req.body.estado == null || req.body.tipo_propiedad == null) {
+            if (req.body.id_activo_fijo == null && req.body.tipo == null && req.body.nombre == null && req.body.serie == null && req.body.fecha_compra == null && req.body.fecha_baja == null && req.body.estado == null && req.body.tipo_propiedad == null && req.body.id_os == null && req.body.id_fabricante == null && req.body.id_modelo == null) {
                 res.status(405).send('Error del cliente, faltan parametros');
                 return;
             }
 
-            let {id_activo_fijo, tipo, fecha_compra, fecha_baja, estado, tipo_propiedad} = req.body;
+            let {id_activo_fijo, tipo, nombre, serie, fecha_compra, fecha_baja, estado, tipo_propiedad, id_os, id_fabricante, id_modelo}= req.body;
 
             fecha_compra = new Date(fecha_compra);
             fecha_baja = new Date(fecha_baja);
@@ -294,10 +304,15 @@ class EquipoController {
             let equipo = {
                 id_activo_fijo,
                 tipo,
+                nombre,
+                serie,
                 fecha_compra,
                 fecha_baja,
                 estado,
-                tipo_propiedad                
+                tipo_propiedad,
+                id_os,
+                id_fabricante,
+                id_modelo                
             }
 
             let objectEquipo = await _equipoService.create(equipo);
@@ -316,11 +331,16 @@ class EquipoController {
                          data = await pool.request()
                          .input('id_activo_fijo', sql.NVarChar, objectEquipo.id_activo_fijo)
                          .input('tipo', sql.NVarChar, objectEquipo.tipo)
+                         .input('nombre', sql.NVarChar, objectEquipo.nombre)
+                         .input('serie', sql.NVarChar, objectEquipo.serie)
                          .input('fecha_compra', sql.DateTime, objectEquipo.fecha_compra)
                          .input('fecha_baja', sql.DateTime, objectEquipo.fecha_baja)
                          .input('estado', sql.NVarChar, objectEquipo.estado)
                          .input('tipo_propiedad', sql.NVarChar, objectEquipo.tipo_propiedad)
-                        .query("UPDATE [dbo].[equipo] SET tipo = @tipo, fecha_compra = @fecha_compra, fecha_baja = @fecha_baja, estado = @estado, tipo_propiedad = @tipo_propiedad WHERE id_activo_fijo = @id_activo_fijo")
+                         .input('id_os', sql.NVarChar, objectEquipo.id_os)
+                         .input('id_fabricante', sql.NVarChar, objectEquipo.id_fabricante)
+                         .input('id_modelo', sql.NVarChar, objectEquipo.id_modelo)
+                        .query("UPDATE [dbo].[equipo] SET tipo = @tipo, nombre = @nombre, serie = @serie, fecha_compra = @fecha_compra, fecha_baja = @fecha_baja, estado = @estado, tipo_propiedad = @tipo_propiedad, id_os = @id_os, id_fabricante = @id_fabricante, id_modelo = @id_modelo WHERE id_activo_fijo = @id_activo_fijo")
                     } catch (error) {
                         console.log('No se pudo actualizar el registro. ', error.message);
                         res.status(500).send(error);
@@ -365,7 +385,7 @@ class EquipoController {
                     try {
                          data = await pool.request()
                         .input('id_activo_fijo', sql.NVarChar, id)
-                        .query("SELECT * FROM [dbo].[equipo] WHERE id_activo_fijo = @id_activo_fijo")
+                        .query("SELECT e.id_activo_fijo, e.nombre, e.serie, e.tipo, e.fecha_compra, e.fecha_baja, e.estado, e.tipo_propiedad, o.nombre AS OS, m.nombre AS modelo, f.nombre AS fabricante FROM [dbo].[equipo] e, [dbo].[sistema_operativo] o, [dbo].[modelo] m, [dbo].[fabricante] f WHERE id_activo_fijo = @id_activo_fijo AND e.id_os = o.id_os AND e.id_modelo = m.id_modelo AND e.id_fabricante = f.id_fabricante")
                     } catch (error) {
                         console.log('No se pudo obtener el registro. ', error.message);
                         res.status(500).send(error);
@@ -402,7 +422,7 @@ class EquipoController {
                     console.log('Conectado a MSSQL');
                     try {
                         data = await pool.request()
-                        .query("SELECT * FROM [dbo].[equipo]")
+                        .query("SELECT e.id_activo_fijo, e.nombre, e.serie, e.tipo, e.fecha_compra, e.fecha_baja, e.estado, e.tipo_propiedad, o.nombre AS OS, m.nombre AS modelo, f.nombre AS fabricante FROM [dbo].[equipo] e, [dbo].[sistema_operativo] o, [dbo].[modelo] m, [dbo].[fabricante] f WHERE e.id_os = o.id_os AND e.id_modelo = m.id_modelo AND e.id_fabricante = f.id_fabricante")
                     } catch (error) {
                         console.log('No se pudo obtener los registros. ', error.message);
                         res.status(500).send(error);
