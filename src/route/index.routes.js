@@ -5,4 +5,5 @@ module.exports = {
     PerifericoRoutes: require('./Periferico.routes'),
     EquipoRoutes: require('./Equipo.routes'),
     AsignacionRoutes: require('./Asignacion.routes'),
+    MantenimientoRoutes: require('./Mantenimiento.routes'),
 };

@@ -5,4 +5,5 @@ module.exports = {
     PerifericoController: require('./Periferico.controller'),
     EquipoController: require('./Equipo.controller'),
     AsignacionController: require('./Asignacion.controller'),
+    MantenimientoController: require('./Mantenimiento.controller'),
 }
