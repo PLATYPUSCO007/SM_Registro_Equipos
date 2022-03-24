@@ -4,4 +4,5 @@ module.exports = {
     AuthController: require('./Auth.controller'),
     PerifericoController: require('./Periferico.controller'),
     EquipoController: require('./Equipo.controller'),
+    AsignacionController: require('./Asignacion.controller'),
 }

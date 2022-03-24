@@ -4,4 +4,5 @@ module.exports = {
     AuthRoutes: require('./Auth.routes'),
     PerifericoRoutes: require('./Periferico.routes'),
     EquipoRoutes: require('./Equipo.routes'),
+    AsignacionRoutes: require('./Asignacion.routes'),
 };
