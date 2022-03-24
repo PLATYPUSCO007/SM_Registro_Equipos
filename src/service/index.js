@@ -5,4 +5,5 @@ module.exports = {
     AuthService: require('./Auth.service'),
     PerifericoService: require('./Periferico.service'),
     EquipoService: require('./Equipo.service'),
+    AsignacionService: require('./Asignacion.service'),
 }
