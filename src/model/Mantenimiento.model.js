@@ -3,7 +3,7 @@ const {ObjectModel} = require('objectmodel');
 const Mantenimiento = new ObjectModel({
     fecha_mantenimiento: Date,
     id_activo_fijo: String,
-    id_tecnico: Date,
+    id_tecnico: String,
     observaciones: String,
     tipo: String
 });

@@ -42,7 +42,7 @@ class MantenimientoController {
                 })
                 .finally(()=>{
                     _pool.close();
-                    console.log(data);
+                    console.log(data.recordset);
                 });
 
         } catch (error) {
@@ -60,7 +60,7 @@ class MantenimientoController {
             let data;
 
             if (req.body.tipo == null || req.body.fecha_mantenimiento == null || req.body.id_tecnico == null || req.body.id_activo_fijo == null) {
-                if (req.body.tipo.toUpperCase() == 'PREVENTIVO' && req.body.actividades == null                                      ) {
+                if (req.body.tipo.toUpperCase() == 'PREVENTIVO' && req.body.actividades == null) {
                     res.status(405).send('Error del cliente, no hay actividades');
                     return;
                 }
@@ -69,6 +69,8 @@ class MantenimientoController {
             }
 
             let {tipo, fecha_mantenimiento, id_tecnico, observaciones, id_activo_fijo, actividades} = req.body;
+
+            fecha_mantenimiento = new Date(fecha_mantenimiento);
 
             let mantenimiento = {
                 fecha_mantenimiento,
@@ -80,6 +82,8 @@ class MantenimientoController {
 
             let objectMantenimiento = await _mantenimientoService.create(mantenimiento);
 
+            console.log(objectMantenimiento);
+
             _pool = _bdService.createInstance();
 
             await _pool.connect()
@@ -88,13 +92,13 @@ class MantenimientoController {
                     try {
                         data = await pool.request()
                         .input('fecha_mantenimiento', sql.DateTime, objectMantenimiento.fecha_mantenimiento)
-                        .input('id_activo_fijo', sql.DateTime, objectMantenimiento.id_activo_fijo)
-                        .input('id_tecnico', sql.DateTime, objectMantenimiento.id_tecnico)
-                        .input('observaciones', sql.DateTime, objectMantenimiento.observaciones)
-                        .input('tipo', sql.DateTime, objectMantenimiento.tipo)
-                        .query('INSERT INTO [dbo].[mantenimiento] (fecha_mantenimiento, id_activo_fijo, id_tecnico, observaciones, tipo) VALUES (@fecha_mantenimiento, @id_activo_fijo, @id_tecnico, @observaciones, @tipo)');                        
+                        .input('id_activo_fijo', sql.NVarChar, objectMantenimiento.id_activo_fijo)
+                        .input('id_tecnico', sql.Int, objectMantenimiento.id_tecnico)
+                        .input('observaciones', sql.NVarChar, objectMantenimiento.observaciones)
+                        .input('tipo', sql.NVarChar, objectMantenimiento.tipo)
+                        .query('INSERT INTO [dbo].[mantenimiento] (fecha_mantenimiento,id_activo_fijo,id_tecnico,observaciones,tipo) VALUES (@fecha_mantenimiento,@id_activo_fijo,@id_tecnico,@observaciones,@tipo)');                        
                         
-                        if (req.body.actividades.toUpperCase() == 'PREVENTIVO'){
+                        if (actividades.toUpperCase() == 'PREVENTIVO'){
                             try {
                                 MantenimientoController.setActivities(req, res);    
                             } catch (error) {
@@ -103,7 +107,7 @@ class MantenimientoController {
                         }
                     
                     } catch (error) {
-                        console.log('No se pudo borrar el registro. ', error.message);
+                        console.log('No se pudo crear el registro. ', error.message);
                         res.status(500).send(error);
                         return;
                     }
