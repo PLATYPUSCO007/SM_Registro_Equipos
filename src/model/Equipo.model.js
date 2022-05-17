@@ -5,6 +5,11 @@ const Equipo = new ObjectModel({
     fecha_baja: Date,
     fecha_compra: Date,
     id_activo_fijo: String,
+    id_fabricante: String,
+    id_modelo: String, 
+    id_os: String,
+    nombre: String,
+    serie: String,
     tipo: String,
     tipo_propiedad: String
 });

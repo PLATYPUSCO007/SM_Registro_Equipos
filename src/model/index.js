@@ -3,4 +3,5 @@ module.exports = {
     PerifericoModel: require('./perifericos.model'),
     EquipoModel: require('./Equipo.model'),
     AsignacionModel: require('./Asignacion.model'),
+    MantenimientoModel: require('./Mantenimiento.model'),
 }
