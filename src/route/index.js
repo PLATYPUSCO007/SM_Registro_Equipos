@@ -14,7 +14,8 @@ module.exports = function ({ BDRoutes, AuthRoutes }) {
 
     apiRoute.use(express.json()).use(cors()).use(helmet()).use(compression());
     apiRoute.use('/BD', BDRoutes);
-    apiRoute.use('/Auth', AuthMiddleware, AuthRoutes);
+    // apiRoute.use('/BD', AuthMiddleware, BDRoutes);
+    apiRoute.use('/Auth', AuthRoutes);
 
 
     router.use("/v1/api", apiRoute);

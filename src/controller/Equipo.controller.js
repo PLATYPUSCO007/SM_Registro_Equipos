@@ -79,9 +79,10 @@ class EquipoController {
                     })
                     .finally(()=>{
                         _pool.close();
-                        res.status(200).json(data);
                     });
             });
+
+            res.status(200).send('Creado con exito!');
 
             return;
     }
@@ -207,10 +208,12 @@ class EquipoController {
                                 
                                 if ((req.files.length == 0)) {
                                     res.status(200).json({data, error: 'No se cargaron los archivos'});
+                                    _pool.close();
                                     return;
                                 }
 
                                 try {
+                                    _pool.close();
                                     EquipoController.upFiles(req, res);
                                 } catch (error) {
                                     console.log(error.message);
@@ -226,9 +229,6 @@ class EquipoController {
                             console.log('Connect Database Failed', error.message);
                             res.status(500).send(error);
                         })
-                        .finally(()=>{
-                            _pool.close();
-                        });
                 }else{
                     res.status(400).send('Error en el servidor ' + objectEquipo.message);
                 }
@@ -246,13 +246,12 @@ class EquipoController {
         try {
 
             let data;
+            let {id} = req.params;
 
-            if (req.params.id == null) {
+            if (!id) {
                 res.status(405).send('Error del cliente, Id no enviado');
                 return;
             }
-
-            let {id} = req.params;
 
             _pool = _bdService.createInstance();
 
