@@ -14,6 +14,6 @@ const Asignacion = new ObjectModel({
 
 Asignacion.create = async function(asignacion){
     return new Asignacion(asignacion);
-}
+} 
 
 module.exports = Asignacion;

@@ -5,7 +5,7 @@ var createInstance = {};
 
 class BDService {
 
-    constructor({ config }) {
+    constructor({ config, BDrepository }) {
         config_db = {
             user: config.USER_DB,
             password: config.PASS_DB,
@@ -19,8 +19,10 @@ class BDService {
             },
             port: parseInt(config.PORT_DB)
         }
-    }
 
+        this.BDRepository = BDrepository;
+    }
+ 
     getMSSQL(){
         return mssql;
     }

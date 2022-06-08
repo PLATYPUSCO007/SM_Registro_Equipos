@@ -4,7 +4,7 @@ const Periferico = new ObjectModel({
     activo: String,
     fecha_asignacion: Date,
     fecha_retiro: Date,
-    id_equipo: String,
+    id_activo_fijo: String,
     motivo_retiro: String,
     tipo: String
 });
