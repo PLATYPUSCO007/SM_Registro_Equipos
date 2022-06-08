@@ -1,6 +1,7 @@
 const { createContainer, asClass, asValue, asFunction } = require('awilix');
 
 const config = require('../config');
+const DbConfig = require('../config/DB.config');
 const app = require('./index');
 
 //Service
@@ -18,7 +19,7 @@ const {UserModel} = require('../model');
 const {PerifericoModel, EquipoModel, AsignacionModel, MantenimientoModel} = require('../model');
 
 //Repositories
-const {AdRepository, BaseRepository, PerifericoRepository, EquipoRepository, AsignacionRepository, MantenimientoRepository} = require('../repository');
+const {BDrepository ,AdRepository, BaseRepository, PerifericoRepository, EquipoRepository, AsignacionRepository, MantenimientoRepository} = require('../repository');
 
 //Config Container
 const container = createContainer();
@@ -27,6 +28,7 @@ container.register({
     app: asClass(app).singleton(),
     router: asFunction(Routes).singleton(),
     config: asValue(config),
+    DbConfig: asClass(DbConfig).singleton(),
 }).register({
     BDService: asClass(BDService).singleton(),
     ADService: asClass(ADService).singleton(),
@@ -59,6 +61,7 @@ container.register({
     Asignacion: asValue(AsignacionModel),
     Mantenimiento: asValue(MantenimientoModel),
 }).register({
+    BDrepository: asClass(BDrepository).singleton(),
     BaseRepository: asClass(BaseRepository).singleton(),
     AdRepository: asClass(AdRepository).singleton(),
     PerifericoRepository: asClass(PerifericoRepository).singleton(),

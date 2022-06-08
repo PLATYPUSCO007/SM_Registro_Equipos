@@ -4,7 +4,7 @@ const app = container.resolve('app');
 
 try {
     app.start().then((connect_succes)=>{
-        console.log(connect_succes);
+        console.log('API ONLINE!');
     });
 } catch (error) {
     console.log(error.message);

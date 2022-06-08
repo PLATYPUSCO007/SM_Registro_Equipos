@@ -1,21 +1,66 @@
 class BaseService{
+
+    #data;
+
     constructor(repository){
         this.repository = repository;
+        this.conn = null;
     }
 
-    async create(entity){
-        if (!entity) {
-            const error = new Error();
-            error.status = 401;
-            error.message = 'Entidad vacia';
-            throw error;
+    async create(object){ 
+        try {
+            this.objectNew = await this.repository.create(object);
+            return this.objectNew;
+        } catch (error) {
+            return ErrorHelper.generateError(`El modelo ${this.repository.name} no es valido ` + error.message, 400);
         }
-
-        return await this.repository.create(entity);
     }
 
     async getUser(){
         return await this.repository.getUser();
+    }
+
+    async execute(query){
+        try {
+            this.conn = await this.repository.connect();
+            this.#data = await this.repository.execute(query);
+            return this.#data;
+        } catch (error) {
+            console.log(`Error en el service ${this.repository.name}`);
+            return error;
+        }        
+    }
+
+    async queryById(id, query){
+        this.conn = await this.repository.connect();
+        await this.repository.bindId(id, this.conn);
+        return new Promise(async (resolve, reject)=>{
+            await this.repository.execute(query)
+                .then(result=>{
+                    resolve(result);
+                })
+                .catch(error=>{
+                    reject(error);
+                });
+        })
+    }
+
+    async queryByObject(asignacion, query){
+        this.conn = await this.repository.connect();
+        await this.repository.bindAsignacion(asignacion, this.conn);
+        return new Promise(async (resolve, reject)=>{
+            await this.repository.execute(query)
+                .then(result=>{
+                    resolve(result);
+                })
+                .catch(error=>{
+                    reject(error);
+                })
+        })
+    }
+
+    async get(){
+        return Promise.resolve(this.repository.name);
     }
 }
 

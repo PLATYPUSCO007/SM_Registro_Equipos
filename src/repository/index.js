@@ -1,4 +1,5 @@
 module.exports = {
+    BDrepository: require('./BD.repository'),
     BaseRepository: require('./base.repository'),
     AdRepository: require('./AD.repository'),
     PerifericoRepository: require('./Perifericos.repository'),
