@@ -3,4 +3,5 @@ module.exports = {
     ErrorMiddleware: require('./error.middleware'),
     AuthMiddleware: require('./auth.middleware'),
     FileMiddleware: require('./UploadFiles.middleware'),
+    DataValidateMiddleware: require('./DataValidation.middleware'),
 }

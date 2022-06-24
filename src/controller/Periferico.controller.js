@@ -14,47 +14,35 @@ class PerifericoController {
 
     async insertPeriferico(req, res) {
 
-            if(req.body.tipo == null || req.body.activo == null || req.body.fecha_asignacion == null || req.body.fecha_retiro == null || req.body.motivo_retiro == null || req.body.id_activo_fijo == null){
-                res.status(405).send('Error del cliente, faltan datos');
-                return;
-            }
-
-                let {tipo, activo, fecha_asignacion, fecha_retiro, motivo_retiro, id_activo_fijo} = req.body;
-
-                fecha_asignacion = new Date(fecha_asignacion);
-                fecha_retiro = new Date(fecha_retiro);
-
-                let periferico = {
-                    tipo,
-                    activo,
-                    fecha_asignacion,
-                    fecha_retiro,
-                    motivo_retiro,
-                    id_activo_fijo
-                }
-
-                let Objectperiferico = await _perifericoService.create(periferico);
-
-                console.log(Objectperiferico);
-
-                if (Objectperiferico.message) {
-                    res.status(400).send('Error en el servidor ' + Objectperiferico.message);
-                    return;
-                }
-
-                this.query = `INSERT INTO [dbo].[perifericos] 
-                    (tipo,activo,fecha_asignacion,fecha_retiro,motivo_retiro,id_activo_fijo) 
-                    VALUES 
-                    (@tipo,@activo,@fecha_asignacion,@fecha_retiro,@motivo_retiro,@id_activo_fijo)`;
-
-                await _perifericoService.queryByObject(Objectperiferico, this.query)
-                    .then(result=>{
-                        res.status(200).send(Objectperiferico);
-                    })
-                    .catch(error=>{
-                        console.dir(error);
-                        res.status(500).send('Error en la operacion!');
-                    })
+        let {tipo, activo, fecha_asignacion, fecha_retiro, motivo_retiro, id_activo_fijo} = req.body;
+        fecha_asignacion = new Date(fecha_asignacion);
+        fecha_retiro = new Date(fecha_retiro);
+        let periferico = {
+            tipo,
+            activo,
+            fecha_asignacion,
+            fecha_retiro,
+            motivo_retiro,
+            id_activo_fijo
+        }
+        let Objectperiferico = await _perifericoService.create(periferico);
+        
+        if (Objectperiferico.message) {
+            res.status(400).send('Error en el servidor ' + Objectperiferico.message);
+            return;
+        }
+        this.query = `INSERT INTO [dbo].[perifericos] 
+            (tipo,activo,fecha_asignacion,fecha_retiro,motivo_retiro,id_activo_fijo) 
+            VALUES 
+            (@tipo,@activo,@fecha_asignacion,@fecha_retiro,@motivo_retiro,@id_activo_fijo)`;
+        await _perifericoService.queryByObject(Objectperiferico, this.query)
+            .then(result=>{
+                res.status(200).send(Objectperiferico);
+            })
+            .catch(error=>{
+                console.dir(error);
+                res.status(500).send('Error en la operacion!');
+            })
     }
 
     async deletePeriferico(req, res) {
@@ -80,10 +68,6 @@ class PerifericoController {
 
     async updatePeriferico(req, res) {
 
-        if(req.body.id == null || req.body.tipo == null || req.body.activo == null || req.body.fecha_asignacion == null || req.body.fecha_retiro == null || req.body.motivo_retiro == null || req.body.id_activo_fijo == null){
-            res.status(405).send('Error del cliente, Id no enviado');
-            return;
-        }
         let {id, tipo, activo, fecha_asignacion, fecha_retiro, motivo_retiro, id_activo_fijo} = req.body;
         fecha_asignacion = new Date(fecha_asignacion);
         fecha_retiro = new Date(fecha_retiro);
@@ -159,16 +143,16 @@ class PerifericoController {
 
     async getPerifericosByIdEquipo(req, res) {
 
-        if(req.params.equipo == null){ 
+        if(req.params.id == null){ 
             res.status(405).send('Error del cliente, Id no enviado');
             return;
         }
 
-        let {equipo} = req.params;
+        let {id} = req.params;
 
         this.query = `SELECT * FROM [dbo].[perifericos] WHERE id_activo_fijo = @id`
 
-        await _perifericoService.queryById(equipo, this.query)
+        await _perifericoService.queryById(id, this.query)
             .then(result=>{
                 res.status(200).send(result);
             })

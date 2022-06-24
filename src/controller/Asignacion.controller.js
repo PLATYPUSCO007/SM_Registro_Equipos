@@ -30,11 +30,6 @@ class AsignacionController {
     // }
 
     async createAsignacion(req, res){
-
-        if (req.body.fecha_asignacion == null || req.body.fecha_retiro == null || req.body.identificacion == null || req.body.id_activo_fijo == null || req.body.motivo_asignacion == null || req.body.motivo_retiro == null || req.body.nombre_asignado == null || req.body.regional == null || req.body.tipo_asignacion == null) {
-            res.status(405).send('Error del cliente, faltan datos');
-            return;
-        }
         
         let {fecha_asignacion, fecha_retiro, identificacion, id_activo_fijo, motivo_asignacion, motivo_retiro, nombre_asignado, regional, tipo_asignacion} = req.body;
 
@@ -75,11 +70,6 @@ class AsignacionController {
     }
 
     async updateAsignacion(req, res){
-
-        if (req.body.id == null || req.body.fecha_asignacion == null || req.body.fecha_retiro == null || req.body.identificacion == null || req.body.id_activo_fijo == null || req.body.motivo_asignacion == null || req.body.motivo_retiro == null || req.body.nombre_asignado == null || req.body.regional == null || req.body.tipo_asignacion == null) {
-            res.status(405).send('Error del cliente, faltan datos');
-            return;
-        }
 
         let {id, fecha_asignacion, fecha_retiro, identificacion, id_activo_fijo, motivo_asignacion, motivo_retiro, nombre_asignado, regional, tipo_asignacion} = req.body;
         

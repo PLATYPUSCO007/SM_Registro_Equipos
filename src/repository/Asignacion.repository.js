@@ -8,7 +8,7 @@ class AsignacionRepository extends BaseRepository{
         this.data = null;
     }
 
-    async bindAsignacion(asignacion, request){
+    async bindObject(asignacion, request){
         return new Promise(async (resolve, reject)=>{
             
             try {

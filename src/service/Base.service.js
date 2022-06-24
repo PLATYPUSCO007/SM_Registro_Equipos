@@ -45,9 +45,9 @@ class BaseService{
         })
     }
 
-    async queryByObject(asignacion, query){
+    async queryByObject(object, query){
         this.conn = await this.repository.connect();
-        await this.repository.bindAsignacion(asignacion, this.conn);
+        await this.repository.bindObject(object, this.conn);
         return new Promise(async (resolve, reject)=>{
             await this.repository.execute(query)
                 .then(result=>{

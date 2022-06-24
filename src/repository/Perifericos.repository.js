@@ -6,7 +6,7 @@ class PerifericoRepository extends BaseRepository{
         this.sql = BDService.getMSSQL();
     }
     
-    async bindAsignacion(periferico, request){
+    async bindObject(periferico, request){
         return new Promise(async (resolve, reject)=>{
             
             try {

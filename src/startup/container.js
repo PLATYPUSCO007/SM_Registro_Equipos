@@ -5,21 +5,20 @@ const DbConfig = require('../config/DB.config');
 const app = require('./index');
 
 //Service
-const { BDService, ADService, AuthService, BaseService, PerifericoService, EquipoService, AsignacionService, MantenimientoService} = require('../service');
+const { BDService, ADService, AuthService, BaseService, PerifericoService, EquipoService, AsignacionService, MantenimientoService, FileService} = require('../service');
 
 //Controller
-const { BDController, ADController, AuthController, PerifericoController, EquipoController, AsignacionController, MantenimientoController} = require('../controller');
+const { BDController, ADController, AuthController, PerifericoController, EquipoController, AsignacionController, MantenimientoController, FileController} = require('../controller');
 
 //Routes
 const Routes = require('../route');
-const { BDRoutes, ADRoutes, AuthRoutes, PerifericoRoutes, EquipoRoutes, AsignacionRoutes, MantenimientoRoutes } = require('../route/index.routes');
+const { BDRoutes, ADRoutes, AuthRoutes, PerifericoRoutes, EquipoRoutes, AsignacionRoutes, MantenimientoRoutes, FileRoutes } = require('../route/index.routes');
 
 //Models
-const {UserModel} = require('../model');
-const {PerifericoModel, EquipoModel, AsignacionModel, MantenimientoModel} = require('../model');
+const {PerifericoModel, EquipoModel, AsignacionModel, MantenimientoModel, FileModel, UserModel} = require('../model');
 
 //Repositories
-const {BDrepository ,AdRepository, BaseRepository, PerifericoRepository, EquipoRepository, AsignacionRepository, MantenimientoRepository} = require('../repository');
+const {BDrepository ,AdRepository, BaseRepository, PerifericoRepository, EquipoRepository, AsignacionRepository, MantenimientoRepository, FileRepository} = require('../repository');
 
 //Config Container
 const container = createContainer();
@@ -38,6 +37,7 @@ container.register({
     EquipoService: asClass(EquipoService).singleton(),
     AsignacionService: asClass(AsignacionService).singleton(),
     MantenimientoService: asClass(MantenimientoService).singleton(),
+    FileService: asClass(FileService).singleton(),
 }).register({
     BDController: asClass(BDController.bind(BDController)).singleton(),
     ADController: asClass(ADController.bind(ADController)).singleton(),
@@ -46,6 +46,7 @@ container.register({
     EquipoController: asClass(EquipoController.bind(EquipoController)).singleton(),
     AsignacionController: asClass(AsignacionController.bind(AsignacionController)).singleton(),
     MantenimientoController: asClass(MantenimientoController.bind(MantenimientoController)).singleton(),
+    FileController: asClass(FileController.bind(FileController)).singleton(),
 }).register({
     BDRoutes: asFunction(BDRoutes).singleton(),
     ADRoutes: asFunction(ADRoutes).singleton(),
@@ -54,12 +55,14 @@ container.register({
     EquipoRoutes: asFunction(EquipoRoutes).singleton(),
     AsignacionRoutes: asFunction(AsignacionRoutes).singleton(),
     MantenimientoRoutes: asFunction(MantenimientoRoutes).singleton(),
+    FileRoutes: asFunction(FileRoutes).singleton(),
 }).register({
     User: asValue(UserModel),
     Periferico: asValue(PerifericoModel),
     Equipo: asValue(EquipoModel),
     Asignacion: asValue(AsignacionModel),
     Mantenimiento: asValue(MantenimientoModel),
+    File: asValue(FileModel),
 }).register({
     BDrepository: asClass(BDrepository).singleton(),
     BaseRepository: asClass(BaseRepository).singleton(),
@@ -68,6 +71,7 @@ container.register({
     EquipoRepository: asClass(EquipoRepository).singleton(),
     AsignacionRepository: asClass(AsignacionRepository).singleton(),
     MantenimientoRepository: asClass(MantenimientoRepository).singleton(),
+    FileRepository: asClass(FileRepository).singleton(),
 });
 
 module.exports = container;

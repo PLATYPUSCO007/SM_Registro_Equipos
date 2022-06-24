@@ -38,7 +38,7 @@ class BaseRepository{
         }
     }
     
-    async bindAsignacion(id, request){
+    async bindObject(id, request){
         return Promise.resolve('Insert');
     }
 

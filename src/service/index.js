@@ -7,4 +7,5 @@ module.exports = {
     EquipoService: require('./Equipo.service'),
     AsignacionService: require('./Asignacion.service'),
     MantenimientoService: require('./Mantenimiento.service'),
+    FileService: require('./File.service'),
 }
