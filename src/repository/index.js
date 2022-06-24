@@ -6,4 +6,5 @@ module.exports = {
     EquipoRepository: require('./Equipo.repository'),
     AsignacionRepository: require('./Asignacion.repository'),
     MantenimientoRepository: require('./Mantenimiento.repository'),
+    FileRepository: require('./File.repository'),
 }

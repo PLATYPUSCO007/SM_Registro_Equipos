@@ -6,4 +6,5 @@ module.exports = {
     EquipoController: require('./Equipo.controller'),
     AsignacionController: require('./Asignacion.controller'),
     MantenimientoController: require('./Mantenimiento.controller'),
+    FileController: require('./File.controller'),
 }
