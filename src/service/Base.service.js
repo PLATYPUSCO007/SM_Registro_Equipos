@@ -1,3 +1,5 @@
+const { ErrorHelper } = require("../helper");
+
 class BaseService{
 
     #data;
@@ -8,7 +10,7 @@ class BaseService{
     }
 
     async create(object){ 
-        try {
+        try { 
             this.objectNew = await this.repository.create(object);
             return this.objectNew;
         } catch (error) {

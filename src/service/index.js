@@ -8,4 +8,5 @@ module.exports = {
     AsignacionService: require('./Asignacion.service'),
     MantenimientoService: require('./Mantenimiento.service'),
     FileService: require('./File.service'),
+    DetalleMantService: require('./DetalleMant.service'),
 }

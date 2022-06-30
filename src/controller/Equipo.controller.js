@@ -50,6 +50,7 @@ class EquipoController {
             (id_activo_fijo,tipo,nombre,serie,fecha_compra,fecha_baja,estado,tipo_propiedad,id_os,id_fabricante,id_modelo) 
             VALUES 
             (@id_activo_fijo,@tipo,@nombre,@serie,@fecha_compra,@fecha_baja,@estado,@tipo_propiedad,@id_os,@id_fabricante,@id_modelo)`;
+            
         await _equipoService.queryByObject(objectEquipo, this.query)
             .then(async (result)=>{
 
