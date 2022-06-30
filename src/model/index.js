@@ -5,4 +5,5 @@ module.exports = {
     AsignacionModel: require('./Asignacion.model'),
     MantenimientoModel: require('./Mantenimiento.model'),
     FileModel: require('./File.model'),
+    DetalleMantModel: require('./DetalleMant.model'),
 }

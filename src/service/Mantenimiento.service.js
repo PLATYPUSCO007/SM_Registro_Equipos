@@ -11,14 +11,6 @@ class MantenimientoService extends BaseService {
         mantenimientoNew = null;
     }
 
-    async create(mantenimiento){
-        try {
-            mantenimientoNew = await _mantenimientoService.create(mantenimiento);
-            return mantenimientoNew;
-        } catch (error) {
-            return ErrorHelper.generateError('El modelo no es valido ' + error.message, 400);
-        }
-    }
 }
 
-module.exports = MantenimientoService;
+module.exports = MantenimientoService; 

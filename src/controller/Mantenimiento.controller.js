@@ -1,3 +1,4 @@
+let _detalleMantService = null;
 let _bdService = null;
 let _mantenimientoService = null;
 let _pool = null;
@@ -7,10 +8,12 @@ class MantenimientoController {
 
     #data = '';
 
-    constructor({ BDService, MantenimientoService}) {
+    constructor({ BDService, MantenimientoService, DetalleMantService}) {
         _bdService = BDService;
         _mantenimientoService = MantenimientoService;
+        _detalleMantService = DetalleMantService;
         sql = _bdService.getMSSQL();
+        this.query = '';
     }
 
     get dataInfo(){
@@ -21,432 +24,241 @@ class MantenimientoController {
         this.#data = value;
     }
 
-    static async setActivities(req, res){
-        let data = '';
-        let pool = '';
-        let last_id = '';
-
-        try { 
-            
-            let {actividades} = req.body;
-
-            _pool = _bdService.createInstance();
-            
-            actividades.forEach(async (actividad, index) => {
-
-                await _pool.connect()
-                .then(async (pool)=>{
-                    console.log('Conectando a MSSQL');
-                    try {
-                        data = await pool.request()
-                        .input('id_actividad', sql.Int, actividad)
-                        .query('INSERT INTO [dbo].[detalle_mantenimiento] (id_mantenimiento, id_actividad) SELECT MAX(id_mantenimiento), @id_actividad FROM [dbo].[mantenimiento]')      
-
-                    } catch (error) {
-                        console.log('No se registraron las actividades. ', error.message);
-                        res.status(500).send(error);
-                        return;
-                    }
-                })
-                .catch(error=>{
-                    console.log('Connect Database Failed', error.message);
-                    res.status(500).send(error);
-                    return;
-                })
-                .finally(()=>{
-                    _pool.close();
-                })
-            });
-
-        } catch (error) {
-            console.log('Error en el registro de actividades ' + error.message);
-            return error;
-        } finally{
-            res.status(200).send('Creado con Exito!');
-        }
-
-    }
-
-    static async updateActivities(actividad, id_detalle){
-        let data = '';
-        let pool = '';
-        let detalle = '';
-
-        try { 
-
-            _pool = _bdService.createInstance();
-
-            await _pool.connect()
-                .then(async (pool)=>{
-                    console.log('Conectando a MSSQL');
-                    try {
-                        data = await pool.request()
-                        .input('id_actividad', sql.Int, actividad)
-                        .input('id_detalle_mant', sql.Int, id_detalle)
-                        .query('UPDATE[dbo].[detalle_mantenimiento] SET id_actividad = @id_actividad WHERE id_detalle_mant=@id_detalle_mant');
-                        
-                        return data;
-
-                    } catch (error) {
-                        console.log('No se registraron las actividades. ', error.message);
-                        // res.status(500).send(error);
-                        return;
-                    }
-                })
-                .catch(error=>{
-                    console.log('Connect Database Failed', error.message);
-                    // res.status(500).send(error);
-                    return;
-                })
-                .finally(()=>{
-                    _pool.close();
-                })
-            
-
-        } catch (error) {
-            console.log('Error en el registro de actividades ' + error.message);
-            return error;
-        }
-    }
-
     async createMantenimiento(req, res){
-        try {
 
-            let data;
+        let {tipo, fecha_mantenimiento, id_tecnico, observaciones, id_activo_fijo, actividades} = req.body;
 
-            if (req.body.tipo == null || req.body.fecha_mantenimiento == null || req.body.id_tecnico == null || req.body.id_activo_fijo == null) {
-                res.status(405).send('Error del cliente, faltan datos');
-                return;
-            }
+        fecha_mantenimiento = new Date(fecha_mantenimiento);
 
-            let {tipo, fecha_mantenimiento, id_tecnico, observaciones, id_activo_fijo, actividades} = req.body;
+        let mantenimiento = {
+            fecha_mantenimiento,
+            id_activo_fijo,
+            id_tecnico,
+            observaciones,
+            tipo
+        }
 
-            if ((tipo.toUpperCase() == 'PREVENTIVO') && (!actividades)) {
-                res.status(405).send('Error del cliente, no hay actividades');
-                return;
-            }
+        let objectMantenimiento = await _mantenimientoService.create(mantenimiento);
 
-            fecha_mantenimiento = new Date(fecha_mantenimiento);
+        if (objectMantenimiento.message) {
+            res.status(405).send('Error del cliente, Datos no validos');
+            return;
+        }
 
-            let mantenimiento = {
-                fecha_mantenimiento,
-                id_activo_fijo,
-                id_tecnico,
-                observaciones,
-                tipo
-            }
+        this.query = `INSERT INTO [dbo].[mantenimiento] 
+            (fecha_mantenimiento,id_activo_fijo,id_tecnico,observaciones,tipo)
+            OUTPUT INSERTED.id_mantenimiento
+            VALUES (@fecha_mantenimiento,@id_activo_fijo,@id_tecnico,@observaciones,@tipo)`;
 
-            let objectMantenimiento = await _mantenimientoService.create(mantenimiento);
+        await _mantenimientoService.queryByObject(objectMantenimiento, this.query)
+            .then(async (result) => {
 
-            _pool = _bdService.createInstance();
+                if (tipo.toUpperCase() == 'PREVENTIVO'){
+                    if (!actividades) {
+                        res.status(200).send({objectMantenimiento, Actividades: `Error del cliente, no hay actividades`});
+                        return true;
+                    }
 
-            await _pool.connect()
-                .then(async (pool)=>{
-                    console.log('Conectando a MSSQL');
-                    try {
-                        data = await pool.request()
-                        .input('fecha_mantenimiento', sql.DateTime, objectMantenimiento.fecha_mantenimiento)
-                        .input('id_activo_fijo', sql.NVarChar, objectMantenimiento.id_activo_fijo)
-                        .input('id_tecnico', sql.Int, objectMantenimiento.id_tecnico)
-                        .input('observaciones', sql.NVarChar, objectMantenimiento.observaciones)
-                        .input('tipo', sql.NVarChar, objectMantenimiento.tipo)
-                        .query('INSERT INTO [dbo].[mantenimiento] (fecha_mantenimiento,id_activo_fijo,id_tecnico,observaciones,tipo) VALUES (@fecha_mantenimiento,@id_activo_fijo,@id_tecnico,@observaciones,@tipo)')                        
-                        .then(result => {
-                            
-                            if (tipo.toUpperCase() == 'PREVENTIVO'){
-                                try {
-                                    _pool.close(); 
-                                    MantenimientoController.setActivities(req, res);
-                                } catch (error) {
-                                    console.log('No se cargaron las actividades ' + error.message);
-                                }
-                            }else{
-                                res.status(200).json(data);
-                                _pool.close();
-                            }
+                    this.query = `INSERT INTO [dbo].[detalle_mantenimiento] 
+                        (id_mantenimiento, id_actividad) 
+                        VALUES (@id_mantenimiento, @id_actividad)`;
+
+                    await _detalleMantService.queryByDetalleMant({id_mantenimiento: result[0].id_mantenimiento, actividades}, this.query)
+                        .then(result=>{
+                            res.status(200).send({objectMantenimiento, Actividades: `${result}`});
+                            return true;
+                        })
+                        .catch(error=>{
+                            res.status(200).send({objectMantenimiento, Actividades: `${error}`});
+                            return true;
                         });
                     
-                    } catch (error) {
-                        console.log('No se pudo crear el registro. ', error.message);
-                        res.status(500).send(error);
-                        return;
-                    }
-                })
-                .catch(error=>{
-                    console.log('Connect Database Failed', error.message);
-                    res.status(500).send(error);
-                    return;
-                });
-            
-        } catch (error) {
-            console.log(error.message);
-            res.status(500).send(error.message);
-        }
-
-        return;
+                }else{
+                    res.status(200).send({objectMantenimiento});
+                }
+            })
+            .catch(error=>{
+                console.dir(error);
+                res.status(500).send('Error en la operacion!');
+            });
     }
 
     async updateMantenimiento(req, res){
-        try {
 
-            let data;
-            let {id} = req.body;
+        let {id, tipo, fecha_mantenimiento, id_tecnico, observaciones, id_activo_fijo, actividades, id_detalles} = req.body;
+        fecha_mantenimiento = new Date(fecha_mantenimiento);
+        let mantenimiento = {
+            fecha_mantenimiento,
+            id_activo_fijo,
+            id_tecnico,
+            observaciones,
+            tipo
+        }
+        let objectMantenimiento = await _mantenimientoService.create(mantenimiento);
 
-            if (!id) {
-                res.status(405).send('Error del cliente, Id no enviado');
-                return;
-            }
-
-            let {tipo, fecha_mantenimiento, id_tecnico, observaciones, id_activo_fijo, actividades, id_detalles} = req.body;
-
-            if ((tipo.toUpperCase() == 'PREVENTIVO') && (!actividades)) {
-                res.status(405).send('Error del cliente, no hay actividades');
-                return;
-            }
-
-            fecha_mantenimiento = new Date(fecha_mantenimiento);
-
-            let mantenimiento = {
-                fecha_mantenimiento,
-                id_activo_fijo,
-                id_tecnico,
-                observaciones,
-                tipo
-            }
-
-            let objectMantenimiento = await _mantenimientoService.create(mantenimiento);
-
-            _pool = _bdService.createInstance();
-
-            await _pool.connect()
-                .then(async (pool)=>{
-                    console.log('Conectando a MSSQL');
-                    try {
-                        data = await pool.request()
-                        .input('id_mantenimiento', sql.Int, id)
-                        .input('fecha_mantenimiento', sql.DateTime, objectMantenimiento.fecha_mantenimiento)
-                        .input('id_activo_fijo', sql.NVarChar, objectMantenimiento.id_activo_fijo)
-                        .input('id_tecnico', sql.Int, objectMantenimiento.id_tecnico)
-                        .input('observaciones', sql.NVarChar, objectMantenimiento.observaciones)
-                        .input('tipo', sql.NVarChar, objectMantenimiento.tipo)
-                        .query(`UPDATE [dbo].[mantenimiento] SET fecha_mantenimiento = @fecha_mantenimiento,
-                                id_activo_fijo = @id_activo_fijo,
-                                id_tecnico = @id_tecnico,
-                                observaciones = @observaciones,
-                                tipo = @tipo 
-                                WHERE id_mantenimiento = @id_mantenimiento`)
-                        .then(result => {
-                            if (tipo.toUpperCase() == 'PREVENTIVO'){
-                                    _pool.close(); 
-                                    for (let i = 0; i < actividades.length; i++) {
-                                        try {
-                                            MantenimientoController.updateActivities(actividades[i], id_detalles[i]);
-                                        } catch (error) {
-                                            console.log('No se cargaron las actividades ' + error.message);
-                                            res.status(506).send(error);
-                                        }    
-                                    }
-                                    res.status(200).send('Actualizado con Exito!');
-                            }else{
-                                res.status(200).send('Actualizado con Exito!');
-                                _pool.close();
-                            }
-                        })
-                    } catch (error) {
-                        console.log('No se pudo borrar el registro. ', error.message);
-                        res.status(500).send(error);
-                        return; 
-                    }
-                })
-                .catch(error=>{
-                    console.log('Connect Database Failed', error.message);
-                    res.status(500).send(error);
-                    return;
-                });
-            
-        } catch (error) {
-            console.log(error.message);
-            res.status(500).send(error);
+        if (objectMantenimiento.message) {
+            res.status(405).send('Error del cliente, Datos no validos');
+            return;
         }
 
-        return;
+        objectMantenimiento.id = id;
+
+        this.query = `UPDATE [dbo].[mantenimiento] SET fecha_mantenimiento = @fecha_mantenimiento,
+            id_activo_fijo = @id_activo_fijo,
+            id_tecnico = @id_tecnico,
+            observaciones = @observaciones,
+            tipo = @tipo 
+            WHERE id_mantenimiento = @id`;
+
+        await _mantenimientoService.queryByObject(objectMantenimiento, this.query)
+            .then(async (result)=>{
+                
+                if (tipo.toUpperCase() == 'PREVENTIVO'){
+                    
+                    if ((!actividades) || (!id_detalles)) {
+                        res.status(200).send({objectMantenimiento, Actividades: `No hay actividades`});
+                        return;
+                    }
+
+                    this.query = `UPDATE[dbo].[detalle_mantenimiento] 
+                        SET id_actividad = @id_actividad 
+                        WHERE id_detalle_mant=@id`;
+
+                    await _detalleMantService.queryByDetalleMant({id_mantenimiento: id, actividades, id: id_detalles}, this.query)
+                        .then(result=>{
+                            res.status(200).send({objectMantenimiento, Actividades: `${result}`});
+                            return true;
+                        })
+                        .catch(error=>{
+                            res.status(200).send({objectMantenimiento, Actividades: `${error}`});
+                            return true;
+                        });
+                }else{
+                    res.status(200).json(objectMantenimiento);
+                }
+            })
+            .catch(error=>{
+                console.dir(error);
+                res.status(500).send('Error en la operacion!');
+            });
     }
 
     async deleteMantenimiento(req, res){
-        let data = '';
-        
-        try {
 
-            let {id} = req.params;
-
-            if (!id) {
-                res.status(405).send('Error del cliente, Id no enviado');
-                return;
-            }
-
-            _pool = _bdService.createInstance();
-
-            await _pool.connect()
-                .then(async (pool)=>{
-                    console.log('Conectando a MSSQL');
-                    try {
-                        data = await pool.request()
-                        .input('id_mantenimiento', sql.Int, id)
-                        .query('DELETE FROM [dbo].[detalle_mantenimiento] WHERE id_mantenimiento = @id_mantenimiento');                        
-                    } catch (error) {
-                        console.log('No se pudo borrar el registro. ', error.message);
-                        res.status(500).send(error);
-                        return true;
-                    }
-                })
-                .catch(error=>{
-                    console.log('Connect Database Failed', error.message);
-                    res.status(500).send(error);
-                    return;
-                })
-                .finally(()=>{
-                    _pool.close();
-                    res.status(200).json(data);
-                });
-            
-        } catch (error) {
-            console.log(error.message);
+        if (!req.params.id) {
+            res.status(405).send('Error del cliente, Id no enviado');
+            return;
         }
+        let {id} = req.params;
 
-        return;
+        this.query = `DELETE FROM [dbo].[mantenimiento] WHERE id_mantenimiento = @id`;
+
+        await _mantenimientoService.queryById(id, this.query)
+            .then(result=>{
+                res.status(200).send(result);
+            })
+            .catch(error=>{
+                console.dir(error);
+                res.status(500).send('Error en la peticion');
+            });
     }
 
     async getMantenimientoByID(req, res){
-        try {
 
-            let data;
-
-            let {id} = req.params;
-
-            if (!id) {
-                res.status(405).send('Error del cliente, Id no enviado');
-                return;
-            }
-
-            _pool = _bdService.createInstance();
-
-            await _pool.connect()
-                .then(async (pool)=>{
-                    console.log('Conectando a MSSQL');
-                    try {
-                        data = await pool.request()
-                        .input('id_mantenimiento', sql.Int, id)
-                        .query(`SELECT M.id_mantenimiento, M.tipo, M.fecha_mantenimiento, M.observaciones, M.id_activo_fijo, T.nombre, D.id_detalle_mant, A.nombre AS actividad
-                            FROM [dbo].[mantenimiento] M LEFT JOIN [dbo].[detalle_mantenimiento] D ON M.id_mantenimiento = D.id_mantenimiento
-                            LEFT JOIN [dbo].[tecnicos] T ON M.id_tecnico = T.id_tecnico LEFT JOIN [dbo].[actividades] A ON D.id_actividad = A.id_actividad
-                            WHERE M.id_mantenimiento = @id_mantenimiento`);                        
-                    } catch (error) {
-                        console.log('No se pudo obtener el registro. ', error.message);
-                        res.status(500).send(error);
-                        return;
-                    }
-                })
-                .catch(error=>{
-                    console.log('Connect Database Failed', error.message);
-                    res.status(500).send(error);
-                    return;
-                })
-                .finally(()=>{
-                    _pool.close();
-                    res.status(200).json(data.recordset);
-                });
-            
-        } catch (error) {
-            console.log(error.message);
+        if (!req.params.id) {
+            res.status(405).send('Error del cliente, Id no enviado');
+            return;
         }
+        
+        let {id} = req.params;
 
-        return;
+        this.query = `SELECT M.id_mantenimiento, M.tipo, M.fecha_mantenimiento, M.observaciones, M.id_activo_fijo, T.nombre,
+            STUFF(
+                (SELECT ', ' + CAST(D.id_detalle_mant AS VARCHAR(10)) FROM [dbo].[detalle_mantenimiento] D 
+                RIGHT JOIN [dbo].[mantenimiento] M ON  D.id_mantenimiento = M.id_mantenimiento
+                WHERE D.id_mantenimiento = @id
+                FOR XML PATH('')),
+                1, 2, '') AS Detalle_Mant,
+            STUFF(
+                (SELECT ', ' + A.nombre FROM [dbo].[actividades] A 
+                RIGHT JOIN [dbo].[detalle_mantenimiento] D ON A.id_actividad = D.id_actividad
+                WHERE D.id_mantenimiento = @id
+                FOR XML PATH('')),
+                1, 2, '') AS Actividades
+            FROM [dbo].[mantenimiento] M LEFT JOIN [dbo].[tecnicos] T ON M.id_tecnico = T.id_tecnico WHERE M.id_mantenimiento = @id`
+        
+        await _mantenimientoService.queryById(id, this.query)
+            .then(result=>{
+                res.status(200).send(result);
+            })
+            .catch(error=>{
+                console.dir(error);
+                res.status(500).send('Error en la peticion');
+            });
     }
 
     async getAllMantenimientos(req, res){
-        try {
 
-            let data;
+        this.query = `SELECT M.id_mantenimiento, M.tipo, M.fecha_mantenimiento, M.observaciones, M.id_activo_fijo, T.nombre,
+            STUFF(
+                (SELECT ', ' + CAST(D.id_detalle_mant AS VARCHAR(10)) FROM [dbo].[detalle_mantenimiento] D 
+                WHERE D.id_mantenimiento = M.id_mantenimiento
+                FOR XML PATH('')),
+                1, 2, '') AS Detalle_Mant,
+            STUFF(
+                (SELECT ', ' + A.nombre FROM [dbo].[actividades] A 
+                RIGHT JOIN [dbo].[detalle_mantenimiento] D ON A.id_actividad = D.id_actividad
+                WHERE D.id_mantenimiento = M.id_mantenimiento
+                FOR XML PATH('')),
+                1, 2, '') AS Actividad
+            FROM [dbo].[mantenimiento] M LEFT JOIN [dbo].[tecnicos] T ON M.id_tecnico = T.id_tecnico`;
 
-            _pool = _bdService.createInstance();
-
-            await _pool.connect()
-                .then(async (pool)=>{
-                    console.log('Conectando a MSSQL');
-                    try {
-
-                        data = await pool.request()
-                        .query(`SELECT M.id_mantenimiento, M.tipo, M.fecha_mantenimiento, M.observaciones, M.id_activo_fijo, T.nombre, D.id_detalle_mant, A.nombre AS actividad
-                            FROM [dbo].[mantenimiento] M INNER JOIN [dbo].[detalle_mantenimiento] D ON M.id_mantenimiento = D.id_mantenimiento
-                            INNER JOIN [dbo].[tecnicos] T ON M.id_tecnico = T.id_tecnico INNER JOIN [dbo].[actividades] A ON D.id_actividad = A.id_actividad`);                        
-                    } catch (error) {
-                        console.log('No obtuvieron los registros. ', error.message);
-                        res.status(500).send(error);
-                        return;
-                    }
-                })
-                .catch(error=>{
-                    console.log('Connect Database Failed', error.message);
-                    res.status(500).send(error);
-                    return;
-                })
-                .finally(()=>{
-                    _pool.close();
-                    res.status(200).json(data.recordset);
-                });
-            
-        } catch (error) {
-            console.log(error.message);
-        }
-
-        return;
+        await _mantenimientoService.execute(this.query)
+            .then(result=>{
+                res.status(200).json(result);
+            })
+            .catch(error=>{
+                console.dir(error);
+                res.status(500).send('Error en la peticion');
+            });
     }
 
     async getMantenimientoByEquipo(req, res){
-        try {
 
-            let data;
-
-            let {id_equipo} = req.params;
-
-            if (!id_equipo) {
+            if (!req.params.id) {
                 res.status(405).send('Error del cliente, Id no enviado');
                 return;
             }
 
-            _pool = _bdService.createInstance();
+            let {id} = req.params;
 
-            await _pool.connect()
-                .then(async (pool)=>{
-                    console.log('Conectando a MSSQL');
-                    try {
-                        data = await pool.request()
-                        .input('id_activo_fijo', sql.NVarChar, id_equipo)
-                        .query(`SELECT M.id_mantenimiento, M.tipo, M.fecha_mantenimiento, M.observaciones, M.id_activo_fijo, T.nombre, D.id_detalle_mant, A.nombre AS actividad
-                            FROM [dbo].[mantenimiento] M LEFT JOIN [dbo].[detalle_mantenimiento] D ON M.id_mantenimiento = D.id_mantenimiento
-                            LEFT JOIN [dbo].[tecnicos] T ON M.id_tecnico = T.id_tecnico LEFT JOIN [dbo].[actividades] A ON D.id_actividad = A.id_actividad
-                            WHERE M.id_activo_fijo = @id_activo_fijo`);
-                    } catch (error) {
-                        console.log('No se pudo obtener el registro. ', error.message);
-                        res.status(500).send(error);
-                        return;
-                    }
+            this.query = `SELECT M.id_mantenimiento, M.tipo, M.fecha_mantenimiento, M.observaciones, M.id_activo_fijo, T.nombre,
+                STUFF(
+                    (SELECT ', ' + CAST(D.id_detalle_mant AS VARCHAR(10)) FROM [dbo].[detalle_mantenimiento] D
+                    WHERE D.id_mantenimiento = M.id_mantenimiento
+                    AND
+                    M.id_activo_fijo = @id
+                    FOR XML PATH('')),
+                    1, 2, '') AS Detalle_Mant,
+                STUFF(
+                    (SELECT ', ' + A.nombre FROM [dbo].[actividades] A 
+                    RIGHT JOIN [dbo].[detalle_mantenimiento] D ON A.id_actividad = D.id_actividad
+                    WHERE D.id_mantenimiento = M.id_mantenimiento
+                    AND
+                    M.id_activo_fijo = @id
+                    FOR XML PATH('')),
+                    1, 2, '') AS Actividad
+                FROM [dbo].[mantenimiento] M LEFT JOIN [dbo].[tecnicos] T ON M.id_tecnico = T.id_tecnico
+                WHERE M.id_activo_fijo = @id`;
+
+            await _mantenimientoService.queryById(id, this.query)
+                .then(result=>{
+                    res.status(200).json(result);
                 })
                 .catch(error=>{
-                    console.log('Connect Database Failed', error.message);
-                    res.status(500).send(error);
-                    return;
-                })
-                .finally(()=>{
-                    _pool.close();
-                    res.status(200).json(data.recordset);
+                    console.dir(error);
+                    res.status(500).send('Error en la peticion');
                 });
-            
-        } catch (error) {
-            console.log(error.message);
-        }
-
-        return;
     }
 
     async getMantenimientosPreventivos(req, res){

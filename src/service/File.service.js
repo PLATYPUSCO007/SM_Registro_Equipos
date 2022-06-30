@@ -35,7 +35,7 @@ class FileService extends BaseService {
                     tipo_archivo
                 }
 
-                let objectFile = await this._fileService.create(fileModel);
+                let objectFile = await super.create(fileModel);
 
                 if (objectFile.message) {
                     reject('El objeto File, no ha sido creado!');
