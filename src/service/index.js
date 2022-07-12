@@ -9,4 +9,5 @@ module.exports = {
     MantenimientoService: require('./Mantenimiento.service'),
     FileService: require('./File.service'),
     DetalleMantService: require('./DetalleMant.service'),
+    SistemaOperativoService: require('./SistemaOperativo.service'),
 }

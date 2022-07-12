@@ -7,4 +7,5 @@ module.exports = {
     AsignacionRoutes: require('./Asignacion.routes'),
     MantenimientoRoutes: require('./Mantenimiento.routes'),
     FileRoutes: require('./File.routes'),
+    SistemaOperativoRoutes: require('./SistemaOperativo.routes'),
 };

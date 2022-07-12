@@ -8,4 +8,5 @@ module.exports = {
     MantenimientoRepository: require('./Mantenimiento.repository'),
     FileRepository: require('./File.repository'),
     DetalleMantRepository: require('./DetalleMant.repository'),
+    SistemaOperativoRepository: require('./SistemaOperativo.repository'),
 }
