@@ -16,19 +16,6 @@ class AsignacionController {
         this.result = null;
     }
 
-    async getVal(req, res){
-        let result = await _asignacionService.get();
-        console.log(result);
-        res.status(200).send(result);
-    }
-
-    // async getData(req, res){
-    //     this.query = 'SELECT * FROM [dbo].[asignacion]';
-    //     this.result = await _asignacionService.execute(this.query);
-    //     console.log(this.result);
-    //     res.status(200).send(this.result);
-    // }
-
     async createAsignacion(req, res){
         
         let {fecha_asignacion, fecha_retiro, identificacion, id_activo_fijo, motivo_asignacion, motivo_retiro, nombre_asignado, regional, tipo_asignacion} = req.body;
@@ -143,6 +130,26 @@ class AsignacionController {
         let {id} = req.params;
         
         this.query = 'SELECT * FROM [dbo].[asignacion] WHERE id_asignacion = @id';
+        await _asignacionService.queryById(id, this.query)
+            .then(result=>{
+                res.status(200).send(result);
+            })
+            .catch(error=>{
+                console.dir(error);
+                res.status(500).send('Error en la peticion');
+            });
+    }
+
+    async getAsignacionByEquipo(req, res){
+        if (req.params.id == null) {
+            res.status(405).send('Error del cliente, Id no enviado');
+            return;
+        }
+
+        let {id} = req.params;
+
+        this.query = `SELECT * FROM [dbo].[asignacion] WHERE id_activo_fijo = @id`;
+
         await _asignacionService.queryById(id, this.query)
             .then(result=>{
                 res.status(200).send(result);

@@ -6,6 +6,7 @@ module.exports = function ({ AsignacionController }) {
 
     router.get('/', AsignacionController.getAllAsignacion);
     router.get('/:id', AsignacionController.getAsignacion);
+    router.get('/equipo/:id', AsignacionController.getAsignacionByEquipo);
     router.post('/insert', DataValidateMiddleware, AsignacionController.createAsignacion);
     router.patch('/update', DataValidateMiddleware, AsignacionController.updateAsignacion);
     router.delete('/delete/:id', AsignacionController.deleteAsignacion);
