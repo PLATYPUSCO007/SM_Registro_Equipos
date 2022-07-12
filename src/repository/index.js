@@ -9,4 +9,5 @@ module.exports = {
     FileRepository: require('./File.repository'),
     DetalleMantRepository: require('./DetalleMant.repository'),
     SistemaOperativoRepository: require('./SistemaOperativo.repository'),
+    FabricanteRepository: require('./Fabricante.repository'),
 }

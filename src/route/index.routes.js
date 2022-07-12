@@ -8,4 +8,5 @@ module.exports = {
     MantenimientoRoutes: require('./Mantenimiento.routes'),
     FileRoutes: require('./File.routes'),
     SistemaOperativoRoutes: require('./SistemaOperativo.routes'),
+    FabricanteRoutes: require('./Fabricante.routes'),
 };

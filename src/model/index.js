@@ -7,4 +7,5 @@ module.exports = {
     FileModel: require('./File.model'),
     DetalleMantModel: require('./DetalleMant.model'),
     SistemaOperativoModel: require('./SistemaOperativo.model'),
+    FabricanteModel: require('./Fabricante.model'),
 }

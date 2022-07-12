@@ -30,7 +30,7 @@ class BaseRepository{
     }
 
     async bindId(id, request){
-        const regex = new RegExp('[A-Z]+', 'i');
+        const regex = new RegExp('[\\D]+', 'g');
         if (regex.test(id)) {
             return Promise.resolve(await request.input('id', this.sql.NVarChar, id));    
         }else{

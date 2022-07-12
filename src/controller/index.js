@@ -8,4 +8,5 @@ module.exports = {
     MantenimientoController: require('./Mantenimiento.controller'),
     FileController: require('./File.controller'),
     SistemaOperativoController: require('./SistemaOperativo.controller'),
+    FabricanteController: require('./Fabricante.controller'),
 }

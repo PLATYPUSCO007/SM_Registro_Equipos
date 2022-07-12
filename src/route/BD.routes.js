@@ -1,6 +1,6 @@
 const { Router } = require('express');
 
-module.exports = function ({ PerifericoRoutes, EquipoRoutes, AsignacionRoutes, MantenimientoRoutes, FileRoutes, SistemaOperativoRoutes }) {
+module.exports = function ({ PerifericoRoutes, EquipoRoutes, AsignacionRoutes, MantenimientoRoutes, FileRoutes, SistemaOperativoRoutes, FabricanteRoutes }) {
     const router = Router();
 
     router.use('/periferico', PerifericoRoutes);
@@ -9,6 +9,7 @@ module.exports = function ({ PerifericoRoutes, EquipoRoutes, AsignacionRoutes, M
     router.use('/mantenimiento', MantenimientoRoutes);
     router.use('/factura', FileRoutes);
     router.use('/so', SistemaOperativoRoutes);
+    router.use('/fabricante', FabricanteRoutes);
 
     router.get('/', function(req, res){
         res.status(200).send('BD LOAD...');
