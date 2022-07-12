@@ -8,4 +8,8 @@ module.exports = {
     MantenimientoRepository: require('./Mantenimiento.repository'),
     FileRepository: require('./File.repository'),
     DetalleMantRepository: require('./DetalleMant.repository'),
+    SistemaOperativoRepository: require('./SistemaOperativo.repository'),
+    FabricanteRepository: require('./Fabricante.repository'),
+    ActividadRepository: require('./Actividad.repository'),
+    TecnicoRepository: require('./Tecnico.repository'),
 }

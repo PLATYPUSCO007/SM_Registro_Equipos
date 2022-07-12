@@ -7,4 +7,8 @@ module.exports = {
     AsignacionRoutes: require('./Asignacion.routes'),
     MantenimientoRoutes: require('./Mantenimiento.routes'),
     FileRoutes: require('./File.routes'),
+    SistemaOperativoRoutes: require('./SistemaOperativo.routes'),
+    FabricanteRoutes: require('./Fabricante.routes'),
+    ActividadRoutes: require('./Actividad.routes'),
+    TecnicoRoutes: require('./Tecnico.routes'),
 };

@@ -6,4 +6,8 @@ module.exports = {
     MantenimientoModel: require('./Mantenimiento.model'),
     FileModel: require('./File.model'),
     DetalleMantModel: require('./DetalleMant.model'),
+    SistemaOperativoModel: require('./SistemaOperativo.model'),
+    FabricanteModel: require('./Fabricante.model'),
+    ActividadModel: require('./Actividad.model'),
+    TecnicoModel: require('./Tecnico.model'),
 }
