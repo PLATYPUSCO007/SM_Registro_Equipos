@@ -9,4 +9,5 @@ module.exports = {
     SistemaOperativoModel: require('./SistemaOperativo.model'),
     FabricanteModel: require('./Fabricante.model'),
     ActividadModel: require('./Actividad.model'),
+    TecnicoModel: require('./Tecnico.model'),
 }

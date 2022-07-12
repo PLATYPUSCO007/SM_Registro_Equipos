@@ -12,4 +12,5 @@ module.exports = {
     SistemaOperativoService: require('./SistemaOperativo.service'),
     FabricanteService: require('./Fabricante.service'),
     ActividadService: require('./Actividad.service'),
+    TecnicoService: require('./Tecnico.service'),
 }

@@ -10,4 +10,5 @@ module.exports = {
     SistemaOperativoRoutes: require('./SistemaOperativo.routes'),
     FabricanteRoutes: require('./Fabricante.routes'),
     ActividadRoutes: require('./Actividad.routes'),
+    TecnicoRoutes: require('./Tecnico.routes'),
 };
