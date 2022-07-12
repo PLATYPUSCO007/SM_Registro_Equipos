@@ -10,4 +10,5 @@ module.exports = {
     DetalleMantRepository: require('./DetalleMant.repository'),
     SistemaOperativoRepository: require('./SistemaOperativo.repository'),
     FabricanteRepository: require('./Fabricante.repository'),
+    ActividadRepository: require('./Actividad.repository'),
 }

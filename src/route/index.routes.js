@@ -9,4 +9,5 @@ module.exports = {
     FileRoutes: require('./File.routes'),
     SistemaOperativoRoutes: require('./SistemaOperativo.routes'),
     FabricanteRoutes: require('./Fabricante.routes'),
+    ActividadRoutes: require('./Actividad.routes'),
 };

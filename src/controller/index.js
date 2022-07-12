@@ -9,4 +9,5 @@ module.exports = {
     FileController: require('./File.controller'),
     SistemaOperativoController: require('./SistemaOperativo.controller'),
     FabricanteController: require('./Fabricante.controller'),
+    ActividadController: require('./Actividad.controller'),
 }
