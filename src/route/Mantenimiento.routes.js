@@ -12,7 +12,7 @@ module.exports = function ({ MantenimientoController }) {
     router.get('/', MantenimientoController.getAllMantenimientos);
     router.get('/all/preventivos', MantenimientoController.getMantenimientosPreventivos);
     router.get('/all/correctivos', MantenimientoController.getMantenimientosCorrectivos);
-    router.get('/all/tecnico/:id_tecnico', MantenimientoController.getMantenimientoByTecnico);
+    router.get('/all/tecnico/:id', MantenimientoController.getMantenimientoByTecnico);
     router.get('/all/fecha/:fecha_in/:fecha_fin', MantenimientoController.getMantenimientoByFechas);
 
     return router;  
