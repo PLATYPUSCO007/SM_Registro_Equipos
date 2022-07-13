@@ -11,4 +11,5 @@ module.exports = {
     FabricanteRoutes: require('./Fabricante.routes'),
     ActividadRoutes: require('./Actividad.routes'),
     TecnicoRoutes: require('./Tecnico.routes'),
+    ModeloRoutes: require('./Modelo.routes'),
 };

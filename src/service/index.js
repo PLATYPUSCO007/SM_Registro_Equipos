@@ -13,4 +13,5 @@ module.exports = {
     FabricanteService: require('./Fabricante.service'),
     ActividadService: require('./Actividad.service'),
     TecnicoService: require('./Tecnico.service'),
+    ModeloService: require('./Modelo.service'),
 }
