@@ -4,9 +4,9 @@ const { FileMiddleware, DataValidateMiddleware } = require('../middleware');
 module.exports = function ({ FileController }) {
     const router = Router();
 
-    router.get('/:id', FileController.getFiles);
-    router.post('/insert', [FileMiddleware], FileController.createFile);
-    router.delete('/delete/:id', FileController.deleteFile);
+    router.get('/:id/:tabla/:campo', FileController.getFiles);
+    router.post('/insert', [FileMiddleware, DataValidateMiddleware], FileController.createFile);
+    router.delete('/delete/:id/:tabla/:campo', FileController.deleteFile);
 
     return router; 
 };

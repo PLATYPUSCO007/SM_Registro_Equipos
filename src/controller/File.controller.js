@@ -12,8 +12,9 @@ class FileController {
         if ((req.files.length !== 0)) {
 
             let files = req.files;
+            let {id_referencia, tabla, campo} = req.body;
 
-            await _fileService.queryByFile(files, id_activo_fijo)
+            await _fileService.queryByFile(files, id_referencia, tabla, campo)
                 .then(result=>{
                     res.status(200).send(result);
                 })
@@ -25,9 +26,9 @@ class FileController {
     }
 
     async deleteFile(req, res){
-        let {id} = req.params;
+        let {id, tabla, campo} = req.params;
 
-        this.query = `DELETE FROM [dbo].[factura] WHERE id_factura = @id`;
+        this.query = `DELETE FROM [dbo].[${tabla}] WHERE ${campo} = @id`;
         await _fileService.queryById(id, this.query)
             .then(result=>{
                 res.status(200).send(result);
@@ -40,9 +41,9 @@ class FileController {
     }
 
     async getFiles(req, res){
-        let {id} = req.params;
+        let {id, tabla, campo} = req.params;
 
-        this.query = `SELECT * FROM [dbo].[factura] WHERE id_activo_fijo = @id`;
+        this.query = `SELECT * FROM [dbo].[${tabla}] WHERE ${campo} = @id`;
         await _fileService.queryById(id, this.query)
             .then(async (files)=>{
 
