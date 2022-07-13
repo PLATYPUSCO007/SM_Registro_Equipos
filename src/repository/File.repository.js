@@ -15,7 +15,7 @@ class FileRepository extends BaseRepository{
                     .input('nombre_archivo', this.sql.NVarChar, file.nombre_archivo)
                     .input('tipo_archivo', this.sql.NVarChar, file.tipo_archivo)
                     .input('contenido_archivo', this.sql.VarBinary(this.sql.MAX), new Buffer(file.contenido_archivo))
-                    .input('id_activo_fijo', this.sql.NVarChar, file.id_activo_fijo)
+                    .input('id_referencia', this.sql.NVarChar, file.id_referencia)
                 resolve(request);    
             } catch (error) {
                 reject(error);

@@ -5,20 +5,20 @@ const DbConfig = require('../config/DB.config');
 const app = require('./index');
 
 //Service
-const { BDService, ADService, AuthService, BaseService, PerifericoService, EquipoService, AsignacionService, MantenimientoService, FileService, DetalleMantService, SistemaOperativoService, FabricanteService, ActividadService, TecnicoService} = require('../service');
+const { BDService, ADService, AuthService, BaseService, PerifericoService, EquipoService, AsignacionService, MantenimientoService, FileService, DetalleMantService, SistemaOperativoService, FabricanteService, ActividadService, TecnicoService, ModeloService} = require('../service');
 
 //Controller
-const { BDController, ADController, AuthController, PerifericoController, EquipoController, AsignacionController, MantenimientoController, FileController, SistemaOperativoController, FabricanteController, ActividadController, TecnicoController} = require('../controller');
+const { BDController, ADController, AuthController, PerifericoController, EquipoController, AsignacionController, MantenimientoController, FileController, SistemaOperativoController, FabricanteController, ActividadController, TecnicoController, ModeloController} = require('../controller');
 
 //Routes
 const Routes = require('../route');
-const { BDRoutes, ADRoutes, AuthRoutes, PerifericoRoutes, EquipoRoutes, AsignacionRoutes, MantenimientoRoutes, FileRoutes, SistemaOperativoRoutes, FabricanteRoutes, ActividadRoutes, TecnicoRoutes } = require('../route/index.routes');
+const { BDRoutes, ADRoutes, AuthRoutes, PerifericoRoutes, EquipoRoutes, AsignacionRoutes, MantenimientoRoutes, FileRoutes, SistemaOperativoRoutes, FabricanteRoutes, ActividadRoutes, TecnicoRoutes, ModeloRoutes } = require('../route/index.routes');
 
 //Models
-const {PerifericoModel, EquipoModel, AsignacionModel, MantenimientoModel, FileModel, UserModel, DetalleMantModel, SistemaOperativoModel, FabricanteModel, ActividadModel, TecnicoModel} = require('../model');
+const {PerifericoModel, EquipoModel, AsignacionModel, MantenimientoModel, FileModel, UserModel, DetalleMantModel, SistemaOperativoModel, FabricanteModel, ActividadModel, TecnicoModel, ModeloModel} = require('../model');
 
 //Repositories
-const {BDrepository ,AdRepository, BaseRepository, PerifericoRepository, EquipoRepository, AsignacionRepository, MantenimientoRepository, FileRepository, DetalleMantRepository, SistemaOperativoRepository, FabricanteRepository, ActividadRepository, TecnicoRepository} = require('../repository');
+const {BDrepository ,AdRepository, BaseRepository, PerifericoRepository, EquipoRepository, AsignacionRepository, MantenimientoRepository, FileRepository, DetalleMantRepository, SistemaOperativoRepository, FabricanteRepository, ActividadRepository, TecnicoRepository, ModeloRepository} = require('../repository');
 
 //Config Container
 const container = createContainer();
@@ -43,6 +43,7 @@ container.register({
     FabricanteService: asClass(FabricanteService).singleton(),
     ActividadService: asClass(ActividadService).singleton(),
     TecnicoService: asClass(TecnicoService).singleton(),
+    ModeloService: asClass(ModeloService).singleton(),
 }).register({
     BDController: asClass(BDController.bind(BDController)).singleton(),
     ADController: asClass(ADController.bind(ADController)).singleton(),
@@ -56,6 +57,7 @@ container.register({
     FabricanteController: asClass(FabricanteController.bind(FabricanteController)).singleton(),
     ActividadController: asClass(ActividadController.bind(ActividadController)).singleton(),
     TecnicoController: asClass(TecnicoController.bind(TecnicoController)).singleton(),
+    ModeloController: asClass(ModeloController.bind(ModeloController)).singleton(),
 }).register({
     BDRoutes: asFunction(BDRoutes).singleton(),
     ADRoutes: asFunction(ADRoutes).singleton(),
@@ -69,6 +71,7 @@ container.register({
     FabricanteRoutes: asFunction(FabricanteRoutes).singleton(),
     ActividadRoutes: asFunction(ActividadRoutes).singleton(),
     TecnicoRoutes: asFunction(TecnicoRoutes).singleton(),
+    ModeloRoutes: asFunction(ModeloRoutes).singleton(),
 }).register({
     User: asValue(UserModel),
     Periferico: asValue(PerifericoModel),
@@ -81,6 +84,7 @@ container.register({
     Fabricante: asValue(FabricanteModel),
     Actividad: asValue(ActividadModel),
     Tecnico: asValue(TecnicoModel),
+    Modelo: asValue(ModeloModel),
 }).register({
     BDrepository: asClass(BDrepository).singleton(),
     BaseRepository: asClass(BaseRepository).singleton(),
@@ -95,6 +99,7 @@ container.register({
     FabricanteRepository: asClass(FabricanteRepository).singleton(),
     ActividadRepository: asClass(ActividadRepository).singleton(),
     TecnicoRepository: asClass(TecnicoRepository).singleton(),
+    ModeloRepository: asClass(ModeloRepository).singleton(),
 });
 
 module.exports = container;

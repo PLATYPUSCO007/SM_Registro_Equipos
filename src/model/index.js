@@ -10,4 +10,5 @@ module.exports = {
     FabricanteModel: require('./Fabricante.model'),
     ActividadModel: require('./Actividad.model'),
     TecnicoModel: require('./Tecnico.model'),
+    ModeloModel: require('./Modelo.model'),
 }

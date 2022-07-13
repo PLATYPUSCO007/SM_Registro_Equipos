@@ -8,19 +8,19 @@ class FileService extends BaseService {
 
     constructor({FileRepository}){
         super(FileRepository);
-        this._fileService = FileRepository;
+        this._fileService = FileRepository; 
         this.fileNew = null;
         this.query = '';
         this.conn = null;
     }
 
-    async queryByFile(files, id_activo_fijo){
+    async queryByFile(files, id_referencia, tabla, campo){
         
         return new Promise((resolve, reject)=>{
             
-            this.query = `INSERT INTO [dbo].[factura] (nombre_archivo,tipo_archivo,contenido_archivo,id_activo_fijo) 
+            this.query = `INSERT INTO [dbo].[${tabla}] (nombre_archivo,tipo_archivo,contenido_archivo,${campo}) 
                         VALUES 
-                        (@nombre_archivo,@tipo_archivo,@contenido_archivo,@id_activo_fijo)`;
+                        (@nombre_archivo,@tipo_archivo,@contenido_archivo,@id_referencia)`;
 
             files.forEach(async (file, index) => {
                 let tipo_archivo = file.mimetype;
@@ -30,7 +30,7 @@ class FileService extends BaseService {
 
                 let fileModel = {
                     contenido_archivo,
-                    id_activo_fijo,
+                    id_referencia,
                     nombre_archivo,
                     tipo_archivo
                 }

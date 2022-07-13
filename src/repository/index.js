@@ -12,4 +12,5 @@ module.exports = {
     FabricanteRepository: require('./Fabricante.repository'),
     ActividadRepository: require('./Actividad.repository'),
     TecnicoRepository: require('./Tecnico.repository'),
+    ModeloRepository: require('./Modelo.repository'),
 }

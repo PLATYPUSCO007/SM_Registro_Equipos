@@ -58,7 +58,7 @@ class EquipoController {
 
                     let files = req.files;
 
-                    await _fileService.queryByFile(files, id_activo_fijo)
+                    await _fileService.queryByFile(files, id_activo_fijo, 'factura', 'id_activo_fijo')
                         .then(result=>{
                             res.status(200).send({objectEquipo, Archivos: `${result}`});
                             return true;
@@ -163,7 +163,7 @@ class EquipoController {
             AND 
             e.id_modelo = m.id_modelo 
             AND 
-            e.id_fabricante = f.id_fabricante`;
+            e.id_fabricante = f.id_fabricante`; 
 
         await _equipoService.queryById(id, this.query)
             .then(result=>{
