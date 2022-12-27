@@ -8,7 +8,7 @@ const {AuthMiddleware} = require('../middleware');
 
 require('express-async-errors');
 
-module.exports = function ({ BDRoutes, AuthRoutes }) {
+module.exports = function ({ BDRoutes, AuthRoutes, PDFRoutes }) {
     const router = express.Router();
     const apiRoute = express.Router();
 
@@ -16,6 +16,8 @@ module.exports = function ({ BDRoutes, AuthRoutes }) {
     apiRoute.use('/BD', BDRoutes);
     // apiRoute.use('/BD', AuthMiddleware, BDRoutes);
     apiRoute.use('/Auth', AuthRoutes);
+
+    apiRoute.use('/pdf', PDFRoutes);
 
 
     router.use("/v1/api", apiRoute);

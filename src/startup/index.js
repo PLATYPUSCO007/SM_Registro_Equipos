@@ -9,7 +9,8 @@ class App{
     constructor({router, config}){
         _config = config;
         _express = express().use(router);
-        _express.use(express.static(path.join(__dirname, '../temp/')))
+        _express.use(express.static(path.join(__dirname, '../temp/')));
+        _express.use(express.static(path.join(__dirname, '../../public/')));
     }
 
     start(){

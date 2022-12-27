@@ -12,4 +12,5 @@ module.exports = {
     ActividadController: require('./Actividad.controller'),
     TecnicoController: require('./Tecnico.controller'),
     ModeloController: require('./Modelo.controller'),
+    PDFController: require('./PDF.controller'),
 }

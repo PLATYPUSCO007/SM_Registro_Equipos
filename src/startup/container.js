@@ -5,14 +5,14 @@ const DbConfig = require('../config/DB.config');
 const app = require('./index');
 
 //Service
-const { BDService, ADService, AuthService, BaseService, PerifericoService, EquipoService, AsignacionService, MantenimientoService, FileService, DetalleMantService, SistemaOperativoService, FabricanteService, ActividadService, TecnicoService, ModeloService} = require('../service');
+const { BDService, ADService, AuthService, BaseService, PerifericoService, EquipoService, AsignacionService, MantenimientoService, FileService, DetalleMantService, SistemaOperativoService, FabricanteService, ActividadService, TecnicoService, ModeloService, PDFService} = require('../service');
 
 //Controller
-const { BDController, ADController, AuthController, PerifericoController, EquipoController, AsignacionController, MantenimientoController, FileController, SistemaOperativoController, FabricanteController, ActividadController, TecnicoController, ModeloController} = require('../controller');
+const { BDController, ADController, AuthController, PerifericoController, EquipoController, AsignacionController, MantenimientoController, FileController, SistemaOperativoController, FabricanteController, ActividadController, TecnicoController, ModeloController, PDFController} = require('../controller');
 
 //Routes
 const Routes = require('../route');
-const { BDRoutes, ADRoutes, AuthRoutes, PerifericoRoutes, EquipoRoutes, AsignacionRoutes, MantenimientoRoutes, FileRoutes, SistemaOperativoRoutes, FabricanteRoutes, ActividadRoutes, TecnicoRoutes, ModeloRoutes } = require('../route/index.routes');
+const { BDRoutes, ADRoutes, AuthRoutes, PerifericoRoutes, EquipoRoutes, AsignacionRoutes, MantenimientoRoutes, FileRoutes, SistemaOperativoRoutes, FabricanteRoutes, ActividadRoutes, TecnicoRoutes, ModeloRoutes, PDFRoutes } = require('../route/index.routes');
 
 //Models
 const {PerifericoModel, EquipoModel, AsignacionModel, MantenimientoModel, FileModel, UserModel, DetalleMantModel, SistemaOperativoModel, FabricanteModel, ActividadModel, TecnicoModel, ModeloModel} = require('../model');
@@ -44,6 +44,7 @@ container.register({
     ActividadService: asClass(ActividadService).singleton(),
     TecnicoService: asClass(TecnicoService).singleton(),
     ModeloService: asClass(ModeloService).singleton(),
+    PDFService: asClass(PDFService).singleton(),
 }).register({
     BDController: asClass(BDController.bind(BDController)).singleton(),
     ADController: asClass(ADController.bind(ADController)).singleton(),
@@ -58,6 +59,7 @@ container.register({
     ActividadController: asClass(ActividadController.bind(ActividadController)).singleton(),
     TecnicoController: asClass(TecnicoController.bind(TecnicoController)).singleton(),
     ModeloController: asClass(ModeloController.bind(ModeloController)).singleton(),
+    PDFController: asClass(PDFController.bind(PDFController)).singleton(),
 }).register({
     BDRoutes: asFunction(BDRoutes).singleton(),
     ADRoutes: asFunction(ADRoutes).singleton(),
@@ -72,6 +74,7 @@ container.register({
     ActividadRoutes: asFunction(ActividadRoutes).singleton(),
     TecnicoRoutes: asFunction(TecnicoRoutes).singleton(),
     ModeloRoutes: asFunction(ModeloRoutes).singleton(),
+    PDFRoutes: asFunction(PDFRoutes).singleton(),
 }).register({
     User: asValue(UserModel),
     Periferico: asValue(PerifericoModel),

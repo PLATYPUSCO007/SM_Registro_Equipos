@@ -14,4 +14,5 @@ module.exports = {
     ActividadService: require('./Actividad.service'),
     TecnicoService: require('./Tecnico.service'),
     ModeloService: require('./Modelo.service'),
+    PDFService: require('./PDF.service'),
 }
