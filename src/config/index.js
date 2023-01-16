@@ -18,4 +18,5 @@ module.exports = {
   PASS_AD: process.env.PASS_AD,
   GROUPNAME: process.env.GROUPNAME,
   TOKEN_SECRET: process.env.TOKEN_SECRET,
+  COOKIE_SECRET: process.env.COOKIE_SECRET,
 };

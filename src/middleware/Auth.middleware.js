@@ -2,8 +2,8 @@ const jwt = require('jsonwebtoken');
 const {TOKEN_SECRET} = require('../config');
 const {ErrorHelper} = require('../helper');
 
-module.exports = function (req, res, next) {
-    const token = req.headers['authorization'];
+verifyToken = (req, res, next)=> {
+    const token = req.session.token;
     if(!token){
         throw ErrorHelper.generateError('Token must be sent', 400);
     }
@@ -17,3 +17,19 @@ module.exports = function (req, res, next) {
         next();
     });
 }
+
+deleteCookieSesion = (req, res, next)=>{
+    try {
+        req.session = null;
+        next();
+    } catch (error) {
+        throw ErrorHelper.generateError(error, 401);
+    }
+}
+
+const authMiddleware = {
+    verifyToken,
+    deleteCookieSesion
+}
+
+module.exports = authMiddleware;

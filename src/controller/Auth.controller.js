@@ -14,15 +14,22 @@ class AuthController {
 
       let auth = await _authService.signIn(user, pass);
 
+      req.session.token = auth.token;
+
       return res.status(200).json({
         message: "Autenticado Satisfactoriamente",
-        auth,
+        user: auth.user,
       });
       
     } catch (error) {
       return res.status(400).send(error.message);
     }
   }
+
+  async logOut(req, res){
+    res.status(200).send('Cerró sesión con exito!')
+  }
+
 }
 
 module.exports = AuthController;
