@@ -1,10 +1,10 @@
 const { Router } = require('express');
-const {DataValidateMiddleware} = require('../middleware');
+const {DataValidateMiddleware, AuthMiddleware} = require('../middleware');
 
 module.exports = function ({ SistemaOperativoController }) {
     const router = Router();
 
-    router.get('/', SistemaOperativoController.getAll);
+    router.get('/', AuthMiddleware, SistemaOperativoController.getAll);
     router.get('/:id', SistemaOperativoController.getById);
     router.post('/insert', DataValidateMiddleware, SistemaOperativoController.insert);
     router.delete('/delete/:id', SistemaOperativoController.delete);

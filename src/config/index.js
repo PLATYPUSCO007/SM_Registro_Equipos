@@ -1,5 +1,6 @@
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
+  console.log('Estoy en DEV', require("dotenv").config());
 }
 
 module.exports = {
