@@ -15,6 +15,7 @@ class AuthController {
       let auth = await _authService.signIn(user, pass);
 
       req.session.token = auth.token;
+      console.log('TOKEN GENERADO --> ', req.session.token);
 
       return res.status(200).json({
         message: "Autenticado Satisfactoriamente",
@@ -22,12 +23,14 @@ class AuthController {
       });
       
     } catch (error) {
-      return res.status(400).send(error.message);
+      return res.status(400).json({error: error.message});
     }
-  }
+  } 
 
   async logOut(req, res){
-    res.status(200).send('Cerró sesión con exito!')
+    res.status(200).json({
+      succes: 'Cerró sesión con exito!'
+    });
   }
 
 }

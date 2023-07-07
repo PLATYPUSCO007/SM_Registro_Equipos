@@ -1,5 +1,4 @@
 const express = require('express');
-const {resolve} = require('./container');
 const path = require('path');
 
 let _express = null;

@@ -3,7 +3,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
 const body_parser = require('body-parser');
-const cookieSession = require('cookie-session');
+const session = require('express-session');
 
 const {AuthMiddleware} = require('../middleware');
 
@@ -13,18 +13,27 @@ module.exports = function ({ BDRoutes, AuthRoutes, PDFRoutes, config }) {
     const router = express.Router();
     const apiRoute = express.Router();
 
-    apiRoute.use(body_parser.json()).use(cors()).use(helmet()).use(compression()).use(body_parser.urlencoded({extended: true}));
-    apiRoute.use(cookieSession({
-        name: 'registro_equipos',
+    apiRoute.use(cors({
+        origin: ["http://localhost:4200"],
+        credentials: true,
+    })).use(body_parser.json()).use(helmet()).use(compression()).use(body_parser.urlencoded({extended: true}));
+    
+    apiRoute.use(session({
+        name: 'control_equipos',
         secret: config.COOKIE_SECRET,
-        httpOnly: true
+        resave: false,
+        saveUninitialized: true,
+        // path: '/',
+        cookie: {
+            httpOnly: false,
+        },
     }))
 
-    apiRoute.use('/BD', BDRoutes);
+    apiRoute.use('/BD', AuthMiddleware.verifyToken, BDRoutes);
     // apiRoute.use('/BD', AuthMiddleware, BDRoutes);
     apiRoute.use('/Auth', AuthRoutes);
 
-    apiRoute.use('/pdf', PDFRoutes);
+    apiRoute.use('/pdf', AuthMiddleware.verifyToken, PDFRoutes);
 
 
     router.use("/v1/api", apiRoute);
