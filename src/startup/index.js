@@ -1,5 +1,4 @@
 const express = require('express');
-const {resolve} = require('./container');
 const path = require('path');
 
 let _express = null;
@@ -9,7 +8,8 @@ class App{
     constructor({router, config}){
         _config = config;
         _express = express().use(router);
-        _express.use(express.static(path.join(__dirname, '../temp/')))
+        _express.use(express.static(path.join(__dirname, '../temp/')));
+        _express.use(express.static(path.join(__dirname, '../../public/')));
     }
 
     start(){

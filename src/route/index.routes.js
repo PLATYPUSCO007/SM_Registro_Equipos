@@ -12,4 +12,5 @@ module.exports = {
     ActividadRoutes: require('./Actividad.routes'),
     TecnicoRoutes: require('./Tecnico.routes'),
     ModeloRoutes: require('./Modelo.routes'),
+    PDFRoutes: require('./PDF.routes'),
 };
